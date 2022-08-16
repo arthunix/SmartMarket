@@ -13,10 +13,6 @@
 #include <dxgi1_4.h>
 #include <tchar.h>
 
-#ifdef WIN32
-#define ImTextureID ImU64
-#endif
-
 /* I will define it on the Solution Proprieties by the way at the end */
 #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 

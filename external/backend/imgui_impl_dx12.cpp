@@ -48,6 +48,10 @@
 #pragma comment(lib, "d3dcompiler") // Automatically link with d3dcompiler.lib as we are using D3DCompile() below.
 #endif
 
+#ifdef WIN32
+#define ImTextureID ImU64
+#endif
+
 // DirectX data
 struct ImGui_ImplDX12_RenderBuffers
 {
