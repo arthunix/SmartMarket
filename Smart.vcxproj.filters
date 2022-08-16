@@ -66,4 +66,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="build_win32.bat">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include=".gitignore" />
+  </ItemGroup>
 </Project>
