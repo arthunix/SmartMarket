@@ -8,12 +8,11 @@
 #include <cstring>
 #include <ctime>
 
-typedef unsigned long long int uuid_t;
 typedef unsigned long long int rrn_t;
 
 class Product {
 private:
-	uuid_t _rrn;
+	rrn_t _rrn;
 	char _name[20];
 	char _description[80];
 	char _brand[10];
