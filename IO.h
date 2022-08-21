@@ -38,6 +38,16 @@ IO::IO(std::string p_Filename)
     /* I think I am creating a file for the first time?? This is an ethernal server
     but can we deal with energy issues but I will not deal with journaling here
     just I will verify if the file already exist */
+    std::ifstream file(p_Filename.c_str());
+    if (file.good()) {
+        ReadFileHeader();
+        file.close();
+    }
+    else {
+        _ioFileStream.open(_fileName.c_str());
+        std::cout << "We have no such file, writing one by the way" << std::endl;
+
+    }
 }
 
 #endif !IO_H
