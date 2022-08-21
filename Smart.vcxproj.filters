@@ -18,51 +18,84 @@
     <ClCompile Include="main.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="external\imgui.cpp">
+    <ClCompile Include="external\imgui\imgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="external\imgui_demo.cpp">
+    <ClCompile Include="external\imgui\imgui_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="external\imgui_draw.cpp">
+    <ClCompile Include="external\imgui\imgui_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="external\imgui_tables.cpp">
+    <ClCompile Include="external\imgui\imgui_tables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="external\imgui_widgets.cpp">
+    <ClCompile Include="external\imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="external\backend\imgui_impl_dx12.cpp">
+    <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="external\backend\imgui_impl_win32.cpp">
+    <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\libcutils\libcutils\common.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\libcutils\libcutils\rbtree.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="external\imconfig.h">
+    <ClInclude Include="Index.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="external\imgui.h">
+    <ClInclude Include="IO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="external\imgui_internal.h">
+    <ClInclude Include="Product.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="external\imstb_rectpack.h">
+    <ClInclude Include="File.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="external\imstb_textedit.h">
+    <ClInclude Include="Section.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="external\imstb_truetype.h">
+    <ClInclude Include="Shelf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="external\backend\imgui_impl_dx12.h">
+    <ClInclude Include="Market.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="external\backend\imgui_impl_win32.h">
+    <ClInclude Include="external\imgui\imstb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imgui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imgui_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imstb_rectpack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imstb_textedit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\backends\imgui_impl_win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\backends\imgui_impl_dx12.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\libcutils\libcutils\common.hh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\libcutils\libcutils\rbtree.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,5 +104,15 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include=".gitignore" />
+    <None Include=".gitmodules" />
+    <None Include="external\imgui\.gitignore" />
+    <None Include="external\imgui\.gitattributes" />
+    <None Include="external\imgui\.editorconfig" />
+    <None Include="external\libcutils\.gitattributes" />
+    <None Include="external\libcutils\.gitignore" />
+    <None Include="external\libcutils\LICENCE" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="external\imgui\LICENSE.txt" />
   </ItemGroup>
 </Project>

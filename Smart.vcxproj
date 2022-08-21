@@ -96,7 +96,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32; ImTextureID=ImU64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\backend</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui;$(SolutionDir)external\imgui\backends;$(SolutionDir)external\libcutils\libcutils</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -112,7 +113,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32; ImTextureID=ImU64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\backend</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui;$(SolutionDir)external\imgui\backends;$(SolutionDir)external\libcutils\libcutils</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,7 +130,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\backend</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui;$(SolutionDir)external\imgui\backends;$(SolutionDir)external\libcutils\libcutils</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,7 +147,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\backend</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui;$(SolutionDir)external\imgui\backends;$(SolutionDir)external\libcutils\libcutils</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,28 +159,49 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="external\backend\imgui_impl_dx12.cpp" />
-    <ClCompile Include="external\backend\imgui_impl_win32.cpp" />
-    <ClCompile Include="external\imgui.cpp" />
-    <ClCompile Include="external\imgui_demo.cpp" />
-    <ClCompile Include="external\imgui_draw.cpp" />
-    <ClCompile Include="external\imgui_tables.cpp" />
-    <ClCompile Include="external\imgui_widgets.cpp" />
+    <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
+    <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="external\imgui\imgui.cpp" />
+    <ClCompile Include="external\imgui\imgui_demo.cpp" />
+    <ClCompile Include="external\imgui\imgui_draw.cpp" />
+    <ClCompile Include="external\imgui\imgui_tables.cpp" />
+    <ClCompile Include="external\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="external\libcutils\libcutils\common.cc" />
+    <ClCompile Include="external\libcutils\libcutils\rbtree.cc" />
     <ClCompile Include="main.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="external\backend\imgui_impl_dx12.h" />
-    <ClInclude Include="external\backend\imgui_impl_win32.h" />
-    <ClInclude Include="external\imconfig.h" />
-    <ClInclude Include="external\imgui.h" />
-    <ClInclude Include="external\imgui_internal.h" />
-    <ClInclude Include="external\imstb_rectpack.h" />
-    <ClInclude Include="external\imstb_textedit.h" />
-    <ClInclude Include="external\imstb_truetype.h" />
+    <ClInclude Include="external\imgui\backends\imgui_impl_dx12.h" />
+    <ClInclude Include="external\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="external\imgui\imconfig.h" />
+    <ClInclude Include="external\imgui\imgui.h" />
+    <ClInclude Include="external\imgui\imgui_internal.h" />
+    <ClInclude Include="external\imgui\imstb_rectpack.h" />
+    <ClInclude Include="external\imgui\imstb_textedit.h" />
+    <ClInclude Include="external\imgui\imstb_truetype.h" />
+    <ClInclude Include="external\libcutils\libcutils\common.hh" />
+    <ClInclude Include="external\libcutils\libcutils\rbtree.hh" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="Index.h" />
+    <ClInclude Include="IO.h" />
+    <ClInclude Include="Market.h" />
+    <ClInclude Include="Product.h" />
+    <ClInclude Include="Section.h" />
+    <ClInclude Include="Shelf.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include=".gitmodules" />
     <None Include="build_win32.bat" />
+    <None Include="external\imgui\.editorconfig" />
+    <None Include="external\imgui\.gitattributes" />
+    <None Include="external\imgui\.gitignore" />
+    <None Include="external\libcutils\.gitattributes" />
+    <None Include="external\libcutils\.gitignore" />
+    <None Include="external\libcutils\LICENCE" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="external\imgui\LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
