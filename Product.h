@@ -12,14 +12,14 @@ typedef unsigned long long int rrn_t;
 
 class Product {
 private:
-	rrn_t _rrn;
-	char _name[20];
-	char _description[80];
-	char _brand[10];
-	time_t _expiration_date;
-	time_t _manufacturing_date;
-	time_t _addition_date;
-	unsigned int _lote;
+	rrn_t mRrn;
+	char mName[20];
+	char mDescription[80];
+	char mBrand[10];
+	time_t mExpirationDate;
+	time_t mManufacturingDate;
+	time_t AdditionDate;
+	unsigned int Lote;
 	// BarCode _barcode; /* Stands for computer vision I think */
 public:
 	Product();
@@ -39,6 +39,5 @@ public:
 	unsigned int getLote();
 	void setLote(unsigned int lote);
 };
-
 
 #endif !PRODUCT_H

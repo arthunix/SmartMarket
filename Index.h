@@ -17,13 +17,13 @@ struct structio_t {
 };
 
 class Index {
-	rbtree *index_tree;
+	rbtree *pIndexTree;
 public:
 	Index() {
-        index_tree = rbtree_create(structio_t_cmp, structio_t_destroy, structio_t_print);
+        pIndexTree = rbtree_create(structio_t_cmp, structio_t_destroy, structio_t_print);
 	}
     ~Index() {
-        rbtree_destroy(index_tree);
+        rbtree_destroy(pIndexTree);
     }
 };
 

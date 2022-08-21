@@ -10,74 +10,76 @@
 #include "Product.h"
 #include "File.h"
 
-template<int p_NumOfSections, int p_NumOfShelfsOnSection, int p_NumOfProductsOnShelf>
+template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
 class IO {
 private:
-    std::string _fileName;
-    std::fstream _ioFileStream;
-    FileHeader _fileHeader;
+    std::string mFileName;
+    std::fstream mIoFileStream;
+    FileHeader mFileHeader;
 
     FileHeader ReadFileHeader();
-    void WriteFileHeader(FileHeader write_header);
+    void WriteFileHeader(FileHeader fileheader);
 
-    bool checkForFileExistency();
+    bool CheckForFileExistency();
 public:
-    IO(std::string p_Filename);
+    IO(std::string filename);
     ~IO();
 
     void RemoveFromInventory();
-    void InsertToInventory(Product new_product);
+    void InsertToInventory(Product product);
     void ModifyFromInventory();
     Product SeekOnInventory();
 
     void RemoveFromShelf();
-    void InsertToShelf(Product new_product);
+    void InsertToShelf(Product product);
     void ModifyFromShelf();
     Product SeekOnShelf();
 
     void CleanFile();
-    FileHeader getFileHeader() { return _fileHeader; };
+    FileHeader getFileHeader() { return mFileHeader; };
 };
 
-template<int p_NumOfSections, int p_NumOfShelfsOnSection, int p_NumOfProductsOnShelf>
-inline IO<p_NumOfSections, p_NumOfShelfsOnSection, p_NumOfProductsOnShelf>::IO(std::string p_Filename)
+template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
+inline IO<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::IO(std::string filename)
 {
     /* I think I am creating a file for the first time?? This is an ethernal server
     but can we deal with energy issues but I will not deal with journaling here
     just I will verify if the file already exist */
-    std::ifstream file(p_Filename.c_str());
+    std::ifstream file(filename.c_str());
     if (file.good())
     {
         ReadFileHeader();
         file.close();
+        mIoFileStream.open(filename.c_str());
+        ReadFileHeader();
     }
     else
     {
-        _ioFileStream.open(_fileName.c_str());
+        mIoFileStream.open(filename.c_str());
         std::cout << "We have no such file, writing one by the way" << std::endl;
-        Section<p_NumOfProductsOnShelf, p_NumOfShelfsOnSection> writingsections;
-        _ioFileStream.write((char*)&_fileHeader, sizeof(FileHeader));
-        for (int i = 0; i < p_NumOfSections; i++)
+        Section<TNumOfProductsOnShelf, TNumOfShelfsOnSection> writingsections;
+        mIoFileStream.write((char*)&mFileHeader, sizeof(FileHeader));
+        for (int i = 0; i < TNumOfSections; i++)
         {
-            _ioFileStream.write((char*)&writingsections, sizeof(writingsections));
+            mIoFileStream.write((char*)&writingsections, sizeof(writingsections));
         }
-        long long actual_byte_offset_for_end_of_maket = _ioFileStream.tellp();
-        _fileHeader = {
-            .__numberOfSections = p_NumOfSections,
-            .__numberOfShelfsOnSection = p_NumOfShelfsOnSection,
-            .__numberOfProductsOnShelf = p_NumOfProductsOnShelf,
-            .__OffsetToShelfBlock = sizeof(_fileHeader),
-            .__OffsetToInventoryBlock = actual_byte_offset_for_end_of_maket
+        long long actual_byte_offset_for_end_of_maket = mIoFileStream.tellp();
+        mFileHeader = {
+            .NumberOfSections = TNumOfSections,
+            .NumberOfShelfsOnSection = TNumOfShelfsOnSection,
+            .NumberOfProductsOnShelf = TNumOfProductsOnShelf,
+            .OffsetToShelfBlock = sizeof(mFileHeader),
+            .OffsetToInventoryBlock = actual_byte_offset_for_end_of_maket
         };
-        _ioFileStream.seekp(std::ios::beg);
-        _ioFileStream.write((char*)&_fileHeader, sizeof(_fileHeader));
+        mIoFileStream.seekp(std::ios::beg);
+        mIoFileStream.write((char*)&mFileHeader, sizeof(mFileHeader));
     }
 }
 
-template<int p_NumOfSections, int p_NumOfShelfsOnSection, int p_NumOfProductsOnShelf>
-inline IO<p_NumOfSections, p_NumOfShelfsOnSection, p_NumOfProductsOnShelf>::~IO()
+template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
+inline IO<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::~IO()
 {
-    _ioFileStream.close();
+    mIoFileStream.close();
 }
 
 #endif // !IO_H

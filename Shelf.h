@@ -9,9 +9,9 @@ struct product_t {
 	Product product;
 };
 
-template<int num_of_products>
+template<int TNumOfProductsOnShelf>
 class Shelf {
-	product_t arr_of_products[num_of_products];
+	product_t arr_of_products[TNumOfProductsOnShelf];
 };
 
 #endif // !SHELF_H
