@@ -7,17 +7,18 @@
 #include <fstream>
 
 #include "Product.h"
-
-/*
-* FILE STRUCTURE ORGANIZATION :
-* 
-first block     : 1 gb - inventory
-second block    : 1 gb - shelf
-*/
+#include "File.h"
 
 class IO {
 private:
     std::string _fileName;
+    std::fstream _ioFileStream;
+    FileHeader _fileHeader;
+
+    FileHeader ReadFileHeader();
+    void WriteFileHeader(FileHeader write_header);
+
+    bool checkForFileExistency();
 public:
     IO(std::string p_Filename);
     ~IO();
@@ -31,5 +32,12 @@ public:
     void ModifyFromShelf();
     Product SeekOnShelf();
 };
+
+IO::IO(std::string p_Filename)
+{
+    /* I think I am creating a file for the first time?? This is an ethernal server
+    but can we deal with energy issues but I will not deal with journaling here
+    just I will verify if the file already exist */
+}
 
 #endif !IO_H
