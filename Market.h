@@ -8,8 +8,8 @@
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
 class Market {
 private:
-	IO<TNumOfSections,TNumOfShelfsOnSection,TNumOfProductsOnShelf> m_iofs;
-	Index m_index;
+	IO<TNumOfSections,TNumOfShelfsOnSection,TNumOfProductsOnShelf> mIOfs;
+	Index mIndex;
 };
 
 
