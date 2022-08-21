@@ -5,11 +5,11 @@
 #include "IO.h"
 #include "Index.h"
 
+template<int NumOfSections, int NumOfShelfsOnSection, int NumOfProductsOnShelf>
 class Market {
 private:
-	// <num_sec, num_slf, num_prd>
-	IO<50, 10, 200> iofs;
-	Index index;
+	IO<NumOfSections,NumOfShelfsOnSection,NumOfProductsOnShelf> m_iofs;
+	Index m_index;
 };
 
 
