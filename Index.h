@@ -32,7 +32,7 @@ private:
         return (structio_t*)ptr;
     }
 public:
-	Index()
+    Index()
     {
         pIndexTree = rbtree_create(structio_t_cmp, structio_t_destroy, structio_t_print);
     }
