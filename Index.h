@@ -18,7 +18,19 @@ static struct structio_t {
 };
 
 class Index {
+private:
 	rbtree *pIndexTree;
+
+    structio_t* safe_structio_malloc()
+    {
+        void* ptr = new structio_t;
+        if (!ptr) {
+            fprintf(stderr, "At [%s:%ul] unable to allocate (%ul bytes) of memory\n",
+                __FILE__, __LINE__, (unsigned long)sizeof(structio_t));
+            exit(EXIT_FAILURE);
+        }
+        return (structio_t*)ptr;
+    }
 public:
 	Index()
     {
@@ -40,7 +52,7 @@ public:
 
     bool InsertToIndex(structio_t structio)
     {
-        structio_t* pNewStructIO = new structio_t;
+        structio_t* pNewStructIO = safe_structio_malloc();
         *pNewStructIO = structio;
         return rbtree_insert(pIndexTree, pNewStructIO);
     }
