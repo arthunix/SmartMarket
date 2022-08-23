@@ -2,7 +2,7 @@
 #ifndef INDEX_H
 #define INDEX_H
 
-#include "rbtree.hh"
+#include "rbtree.h"
 #include "Product.h"
 
 static void structio_t_destroy(void* a);

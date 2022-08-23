@@ -166,8 +166,8 @@
     <ClCompile Include="external\imgui\imgui_draw.cpp" />
     <ClCompile Include="external\imgui\imgui_tables.cpp" />
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="external\libcutils\common.cc" />
-    <ClCompile Include="external\libcutils\rbtree.cc" />
+    <ClCompile Include="external\libcutils\common.c" />
+    <ClCompile Include="external\libcutils\rbtree.c" />
     <ClCompile Include="main.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -179,8 +179,8 @@
     <ClInclude Include="external\imgui\imstb_rectpack.h" />
     <ClInclude Include="external\imgui\imstb_textedit.h" />
     <ClInclude Include="external\imgui\imstb_truetype.h" />
-    <ClInclude Include="external\libcutils\common.hh" />
-    <ClInclude Include="external\libcutils\rbtree.hh" />
+    <ClInclude Include="external\libcutils\common.h" />
+    <ClInclude Include="external\libcutils\rbtree.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="Index.h" />
     <ClInclude Include="IO.h" />
