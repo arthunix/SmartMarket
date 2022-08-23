@@ -11,7 +11,7 @@ static int structio_t_cmp(const void* a, const void* b);
 
 static void structio_t_print(const void* a);
 
-struct structio_t {
+static struct structio_t {
 	long long int Offset;
     bool AmIonInventory; /* If not I am on the shelf */
 	rrn_t Rrn;
@@ -20,11 +20,45 @@ struct structio_t {
 class Index {
 	rbtree *pIndexTree;
 public:
-	Index() {
+	Index()
+    {
         pIndexTree = rbtree_create(structio_t_cmp, structio_t_destroy, structio_t_print);
 	}
-    ~Index() {
+    ~Index()
+    {
         rbtree_destroy(pIndexTree);
+    }
+
+    structio_t LookupAtIndex(rrn_t unic_id)
+    {
+        structio_t lStructIO;
+        lStructIO.Rrn = unic_id;
+        rbnode* NodeFound = rbtree_search(pIndexTree, &lStructIO);
+
+        return *((structio_t*)((*NodeFound).data));
+    }
+
+    bool InsertToIndex(structio_t structio)
+    {
+        structio_t* pNewStructIO = new structio_t;
+        *pNewStructIO = structio;
+        return rbtree_insert(pIndexTree, pNewStructIO);
+    }
+
+    bool RemoveFromIndex(rrn_t unic_id)
+    {
+        structio_t lStructIO;
+        lStructIO.Rrn = unic_id;
+        rbnode* NodeFound = rbtree_search(pIndexTree, &lStructIO);
+        if (NodeFound)
+        {
+            rbtree_delete(pIndexTree, NodeFound);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 };
 
