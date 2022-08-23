@@ -96,7 +96,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32; ImTextureID=ImU64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui;$(SolutionDir)external\imgui\backends;$(SolutionDir)external\libcutils\libcutils</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui;$(SolutionDir)external\imgui\backends;$(SolutionDir)external\libcutils</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -113,7 +113,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32; ImTextureID=ImU64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui;$(SolutionDir)external\imgui\backends;$(SolutionDir)external\libcutils\libcutils</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui;$(SolutionDir)external\imgui\backends;$(SolutionDir)external\libcutils</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -130,7 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui;$(SolutionDir)external\imgui\backends;$(SolutionDir)external\libcutils\libcutils</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui;$(SolutionDir)external\imgui\backends;$(SolutionDir)external\libcutils</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -147,7 +147,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui;$(SolutionDir)external\imgui\backends;$(SolutionDir)external\libcutils\libcutils</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui;$(SolutionDir)external\imgui\backends;$(SolutionDir)external\libcutils</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -166,8 +166,8 @@
     <ClCompile Include="external\imgui\imgui_draw.cpp" />
     <ClCompile Include="external\imgui\imgui_tables.cpp" />
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="external\libcutils\libcutils\common.cc" />
-    <ClCompile Include="external\libcutils\libcutils\rbtree.cc" />
+    <ClCompile Include="external\libcutils\common.cc" />
+    <ClCompile Include="external\libcutils\rbtree.cc" />
     <ClCompile Include="main.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -179,8 +179,8 @@
     <ClInclude Include="external\imgui\imstb_rectpack.h" />
     <ClInclude Include="external\imgui\imstb_textedit.h" />
     <ClInclude Include="external\imgui\imstb_truetype.h" />
-    <ClInclude Include="external\libcutils\libcutils\common.hh" />
-    <ClInclude Include="external\libcutils\libcutils\rbtree.hh" />
+    <ClInclude Include="external\libcutils\common.hh" />
+    <ClInclude Include="external\libcutils\rbtree.hh" />
     <ClInclude Include="File.h" />
     <ClInclude Include="Index.h" />
     <ClInclude Include="IO.h" />

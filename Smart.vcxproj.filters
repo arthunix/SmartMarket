@@ -45,6 +45,12 @@
     <ClCompile Include="external\libcutils\libcutils\rbtree.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="external\libcutils\common.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\libcutils\rbtree.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Index.h">
@@ -96,6 +102,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="external\libcutils\libcutils\rbtree.hh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\libcutils\common.hh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\libcutils\rbtree.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
