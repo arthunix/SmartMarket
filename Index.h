@@ -91,11 +91,11 @@ void structio_t_destroy(void* struct_io)
 
 int structio_t_cmp(const void* a, const void* b)
 {
-    if ( (strcpy((*(structio_t*)a).mName, (*(structio_t*)b).mName)) < 0 )
+    if ( (strcmp((*(structio_t*)a).mName, (*(structio_t*)b).mName)) < 0 )
     {
         return -1;
     }
-    else if ( (strcpy((*(structio_t*)a).mName, (*(structio_t*)b).mName)) > 0)
+    else if ( (strcmp((*(structio_t*)a).mName, (*(structio_t*)b).mName)) > 0)
     {
         return 1;
     }
