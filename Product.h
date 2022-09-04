@@ -89,7 +89,7 @@ const char* Product::getName()
 
 void Product::setName(const char* Name)
 {
-	memcpy(mName, Name, NAME_SIZE);
+	strcpy_s(mName, NAME_SIZE, Name);
 }
 
 const char* Product::getDescription()
@@ -99,7 +99,7 @@ const char* Product::getDescription()
 
 void Product::setDescription(const char* Description)
 {
-	memcpy(mDescription, Description, DESCRIPTION_SIZE);
+	strcpy_s(mDescription, DESCRIPTION_SIZE, Description);
 }
 
 const char* Product::getBrand()
@@ -109,7 +109,7 @@ const char* Product::getBrand()
 
 void Product::setBrand(const char* Brand)
 {
-	memcpy(mBrand, Brand, BRAND_SIZE);
+	strcpy_s(mBrand, BRAND_SIZE, Brand);
 }
 
 time_t Product::getExpirationDate()
