@@ -36,10 +36,10 @@ private:
         return (structio_t*)ptr;
     }
 
-    rbnode* FindIndexNode(const char* NameToLoockup)
+    rbnode* FindIndexNode(const char* NameToLookup)
     {
         structio_t lStructIO;
-        strcpy_s(lStructIO.mName, NAME_SIZE, NameToLoockup);
+        strcpy_s(lStructIO.mName, NAME_SIZE, NameToLookup);
         return rbtree_search(pIndexTree, &lStructIO);
     }
 
@@ -54,9 +54,9 @@ public:
         rbtree_destroy(pIndexTree);
     }
 
-    structio_t LookupAtIndex(const char* NameToLoockup)
+    structio_t LookupAtIndex(const char* NameToLookup)
     {
-        rbnode* NodeFound = FindIndexNode(NameToLoockup);
+        rbnode* NodeFound = FindIndexNode(NameToLookup);
 
         return *((structio_t*)((*NodeFound).data));
     }
@@ -68,9 +68,9 @@ public:
         return rbtree_insert(pIndexTree, pNewStructIO);
     }
 
-    bool RemoveFromIndex(const char* NameToLoockup)
+    bool RemoveFromIndex(const char* NameToLookup)
     {
-        rbnode* NodeFound = FindIndexNode(NameToLoockup);
+        rbnode* NodeFound = FindIndexNode(NameToLookup);
 
         if (NodeFound)
         {
@@ -99,7 +99,7 @@ int structio_t_cmp(const void* a, const void* b)
     {
         return 1;
     }
-    else // ( (strcpy((*(structio_t*)a).mName, (*(structio_t*)b).mName)) == 0)
+    else // ( (strcmp((*(structio_t*)a).mName, (*(structio_t*)b).mName)) == 0)
     {
         return 0;
     }
