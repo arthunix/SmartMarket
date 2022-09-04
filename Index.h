@@ -2,24 +2,28 @@
 #ifndef INDEX_H
 #define INDEX_H
 
+#include <cstring>
+
 #include "rbtree.h"
 #include "Product.h"
 
+// IMPORTANT DEFINITIONS FOR THE INDEX
+// Defining basic structures
+typedef unsigned long long int rrn_t;
+struct structio_t {
+    bool mAmIonInventory; /* If not I am on the shelf */
+    char mName[NAME_SIZE]; /* I think we don't need to store the entire name */
+    long long int mOffset; /* Where we should look for in an IO operation */
+};
+// Defining necessary functions
 static void structio_t_destroy(void* a);
-
 static int structio_t_cmp(const void* a, const void* b);
-
 static void structio_t_print(const void* a);
 
-static struct structio_t {
-	long long int Offset;
-    bool AmIonInventory; /* If not I am on the shelf */
-	rrn_t Rrn;
-};
 
 class Index {
 private:
-	rbtree *pIndexTree;
+    rbtree* pIndexTree;
 
     structio_t* safe_structio_malloc()
     {
@@ -31,6 +35,14 @@ private:
         }
         return (structio_t*)ptr;
     }
+
+    rbnode* FindIndexNode(const char* NameToLoockup)
+    {
+        structio_t lStructIO;
+        strcpy_s(lStructIO.mName, NAME_SIZE, NameToLoockup);
+        return rbtree_search(pIndexTree, &lStructIO);
+    }
+
 public:
     Index()
     {
@@ -42,11 +54,9 @@ public:
         rbtree_destroy(pIndexTree);
     }
 
-    structio_t LookupAtIndex(rrn_t unic_id)
+    structio_t LookupAtIndex(const char* NameToLoockup)
     {
-        structio_t lStructIO;
-        lStructIO.Rrn = unic_id;
-        rbnode* NodeFound = rbtree_search(pIndexTree, &lStructIO);
+        rbnode* NodeFound = FindIndexNode(NameToLoockup);
 
         return *((structio_t*)((*NodeFound).data));
     }
@@ -58,11 +68,10 @@ public:
         return rbtree_insert(pIndexTree, pNewStructIO);
     }
 
-    bool RemoveFromIndex(rrn_t unic_id)
+    bool RemoveFromIndex(const char* NameToLoockup)
     {
-        structio_t lStructIO;
-        lStructIO.Rrn = unic_id;
-        rbnode* NodeFound = rbtree_search(pIndexTree, &lStructIO);
+        rbnode* NodeFound = FindIndexNode(NameToLoockup);
+
         if (NodeFound)
         {
             rbtree_delete(pIndexTree, NodeFound);
@@ -75,30 +84,31 @@ public:
     }
 };
 
-void structio_t_destroy(void* a)
+void structio_t_destroy(void* struct_io)
 {
-    free((structio_t*)a);
+    free((structio_t*)struct_io);
 }
 
 int structio_t_cmp(const void* a, const void* b)
 {
-
-    if ((*(structio_t*)a).Rrn < (*(structio_t*)b).Rrn)
+    if ( (strcpy((*(structio_t*)a).mName, (*(structio_t*)b).mName)) < 0 )
     {
         return -1;
     }
-    else if ((*(structio_t*)a).Rrn > (*(structio_t*)b).Rrn)
+    else if ( (strcpy((*(structio_t*)a).mName, (*(structio_t*)b).mName)) > 0)
     {
         return 1;
     }
-    else
+    else // ( (strcpy((*(structio_t*)a).mName, (*(structio_t*)b).mName)) == 0)
     {
         return 0;
     }
 }
 
-void structio_t_print(const void* a) {
-    printf("%lli", *(long long int*)a);
+void structio_t_print(const void* struct_io) {
+    printf("Name    = %s / ", (*(structio_t*)struct_io).mName);
+    printf("Offset  = %lli", (*(structio_t*)struct_io).mOffset);
+    fflush(NULL);
 }
 
 #endif !INDEX_H
