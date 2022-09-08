@@ -39,16 +39,16 @@
     <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="external\libcutils\common.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="external\libcutils\rbtree.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="external\libcutils\rbtree.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="external\libcutils\common.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui-outofthree-addons\imguidatechooser\imguidatechooser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\libcutils\list.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,16 +98,16 @@
     <ClInclude Include="external\imgui\backends\imgui_impl_dx12.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="external\libcutils\common.hh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="external\libcutils\rbtree.hh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="external\libcutils\rbtree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="external\libcutils\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui-outofthree-addons\imguidatechooser\imguidatechooser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\libcutils\list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
