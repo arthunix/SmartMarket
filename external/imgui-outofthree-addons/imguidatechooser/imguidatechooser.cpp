@@ -36,23 +36,24 @@ namespace ImGui {
 
 inline static tm GetCurrentDate() {
     time_t now;time(&now);
-    return *localtime(&now);
+    tm tm_now; localtime_s(&tm_now, &now);
+    return tm_now;
 }
+
 // Tip: we modify tm (its fields can even be negative!) and then we call this method to retrieve a valid date
 inline static void RecalculateDateDependentFields(tm& date)    {
     date.tm_isdst=-1;   // This tries to detect day time savings too
     time_t tmp = mktime(&date);
-    date=*localtime(&tmp);
+    localtime_s(&date,&tmp);
 }
-/*inline static size_t DateToString(tm& d,char* buf,size_t bufferSize)  {
+/*
+inline static size_t DateToString(tm& d,char* buf,size_t bufferSize)  {
     return strftime(buf,bufferSize,
-                    //"%a %d %b %Y"
                     "%d/%m/%Y"
                     ,&d);
 }*/
 
-
-inline static tm GetDateZero() {
+tm GetDateZero() {
     tm date;
     memset(&date,0,sizeof(tm));     // Mandatory for emscripten. Please do not remove!
     date.tm_isdst=-1;
@@ -152,7 +153,7 @@ bool DateChooser(const char* label, tm& dateOut,const char* dateFormat,bool clos
             // We want the first letter to be uppercase (because some locales provide it lowercase)
             if (strlen(monthName)==0) {
                 static const char* fallbacks[12]={"January","February","March","April","May","June","July","August","September","October","November","December"};
-                strcpy(monthName,fallbacks[i]);
+                strcpy_s(monthName,sizeof(monthName),fallbacks[i]);
             }
             else monthName[0]=toupper(monthName[0]);
             //fprintf(stderr,"%s\n",monthNames[i]);
@@ -219,7 +220,7 @@ bool DateChooser(const char* label, tm& dateOut,const char* dateFormat,bool clos
     static const ImVec4 transparent(1,1,1,0);
     ImGui::PushStyleColor(ImGuiCol_Button,transparent);
 
-    static char yearString[12]="";sprintf(yearString,"%d",1900+d.tm_year);
+    static char yearString[12]="";sprintf_s(yearString,"%d",1900+d.tm_year);
     //const float monthPartWidth = arrowLeftWidth + arrowRightWidth + ImGui::CalcTextSize(monthNames[d.tm_mon]).x;
     const float yearPartWidth = arrowLeftWidth + arrowRightWidth + ImGui::CalcTextSize(yearString).x + widthAdder*0.5f;
 
@@ -309,8 +310,8 @@ bool DateChooser(const char* label, tm& dateOut,const char* dateFormat,bool clos
             int cday=curDay+7*row;
             if (cday>=0 && cday<maxDayOfCurMonth)  {
                 ImGui::PushID(row*10+dw);
-                if (cday<9) sprintf(curDayStr," %d",cday+1);
-                else sprintf(curDayStr,"%d",cday+1);
+                if (cday<9) sprintf_s(curDayStr," %d",cday+1);
+                else sprintf_s(curDayStr,"%d",cday+1);
                 if (ImGui::SmallButton(curDayStr)) {
                     //-------------------------
                     value_changed = true;
