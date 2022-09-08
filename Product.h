@@ -20,12 +20,12 @@ private:
 	time_t mExpirationDate;
 	time_t mManufacturingDate;
 	time_t mAdditionDate;
+	double mPrice;
 	unsigned int mLote;
 	// BarCode _barcode; /* Stands for computer vision I think */
 public:
-	Product(char Name[], char Description[], 
-		char Brand[], time_t ExpirationDate, time_t ManufacturingDate, 
-			time_t AdditionDate, unsigned int Lote);
+	Product(char Name[], char Description[], char Brand[], time_t ExpirationDate, 
+		time_t ManufacturingDate, unsigned int Lote, double Price);
 
 	~Product();
 
@@ -56,6 +56,10 @@ public:
 	unsigned int getLote();
 
 	void setLote(unsigned int Lote);
+
+	double getPrice();
+
+	void setPrice(double Price);
 };
 
 Product::Product (
@@ -63,9 +67,9 @@ char Name[],
 char Description[], 
 char Brand[], 
 time_t ExpirationDate, 
-time_t ManufacturingDate, 
-time_t AdditionDate, 
-unsigned int Lote
+time_t ManufacturingDate,
+unsigned int Lote,
+double Price
 )
 {
 	memcpy(mName, Name, NAME_SIZE);
@@ -75,6 +79,7 @@ unsigned int Lote
 	mManufacturingDate = ManufacturingDate;
 	time_t currTime; mAdditionDate = time(&currTime);
 	mLote = Lote;
+	mPrice = Price;
 }
 
 Product::~Product()
@@ -150,6 +155,16 @@ unsigned int Product::getLote()
 void Product::setLote(unsigned int Lote)
 {
 	mLote = Lote;
+}
+
+double Product::getPrice()
+{
+	return mPrice;
+}
+
+void Product::setPrice(double Price)
+{
+	mPrice = Price;
 }
 
 #endif !PRODUCT_H
