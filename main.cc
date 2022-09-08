@@ -12,8 +12,10 @@
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include <tchar.h>
+#include <ctime>
 
 #include "Market.h"
+#include "imguidatechooser.h"
 
 /* I will define it on the Solution Proprieties by the way at the end */
 #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
@@ -145,6 +147,52 @@ int main(int, char**)
 
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
+        
+        {
+            ImGui::Begin("Smart Market - Main Window");
+
+            if (ImGui::CollapsingHeader("Search"))
+            {
+                static char str1[NAME_SIZE] = "";
+                ImGui::InputTextWithHint(" ", "The name of the product to search", str1, IM_ARRAYSIZE(str1));
+                ImGui::SameLine();
+                if (ImGui::Button("Search"))
+                {
+                    // Take some actions
+                }
+            }
+
+            if (ImGui::CollapsingHeader("Insert"))
+            {
+                static char str_name[NAME_SIZE] = "";
+                static char str_descript[DESCRIPTION_SIZE] = "";
+                static char str_manuf[BRAND_SIZE] = "";
+                static tm additiondate = ImGui::GetDateZero();
+                static tm expirationdate = ImGui::GetDateZero();
+                static tm manufacturingdate = ImGui::GetDateZero();
+
+                ImGui::InputTextWithHint(" ", "The name of the product", str_name, IM_ARRAYSIZE(str_name));
+                ImGui::InputTextWithHint(" ", "The description of the product", str_descript, IM_ARRAYSIZE(str_descript));
+                ImGui::InputTextWithHint(" ", "The brand of the product", str_manuf, IM_ARRAYSIZE(str_manuf));
+                ImGui::DateChooser("Choose Addition Date", additiondate, "%m/%d/%Y", false, (bool*)0, "|", "|", "|", "|");
+                ImGui::DateChooser("Choose Expiration Date", expirationdate, "%m/%d/%Y", false, (bool*)0, "|", "|", "|", "|");
+                ImGui::DateChooser("Choose Manufacturing Date", manufacturingdate, "%m/%d/%Y", false, (bool*)0, "|", "|", "|", "|");
+            }
+
+            if (ImGui::CollapsingHeader("Remove"))
+            {
+                static char str2[NAME_SIZE] = "";
+                ImGui::InputTextWithHint(" ", "The name of the product to search", str2, IM_ARRAYSIZE(str2));
+            }
+
+            if (ImGui::CollapsingHeader("Change"))
+            {
+                static char str2[NAME_SIZE] = "";
+                ImGui::InputTextWithHint(" ", "The name of the product to search", str2, IM_ARRAYSIZE(str2));
+            }
+
+            ImGui::End();
+        }
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
         {
