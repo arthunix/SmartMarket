@@ -4,14 +4,14 @@
 
 #include "Product.h"
 
-struct product_t {
-	bool is_deleted = true;
-	Product product;
+struct product_controller_t {
+	bool is_occuped = false;
+	bool is_deleted = false;
 };
 
 template<int TNumOfProductsOnShelf>
 class Shelf {
-	product_t arr_of_products[TNumOfProductsOnShelf];
+	product_controller_t arr_of_products[TNumOfProductsOnShelf];
 };
 
 #endif // !SHELF_H
