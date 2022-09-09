@@ -13,6 +13,8 @@
 #include <dxgi1_4.h>
 #include <tchar.h>
 #include <ctime>
+#include <iostream>
+#include <vector>
 
 #include "Market.h"
 #include "imguidatechooser.h"
@@ -156,11 +158,31 @@ int main(int, char**)
             if (ImGui::CollapsingHeader("Search"))
             {
                 static char name[NAME_SIZE] = "";
+                static const char** items_arr = new const char* [20];
+                static bool show_intems_found = false;
+
                 ImGui::InputTextWithHint("Find", "The name of the product to search", name, IM_ARRAYSIZE(name));
                 ImGui::SameLine();
-                if (ImGui::Button("Search"))
+                if (ImGui::Button("Search On Market"))
                 {
-                    // Take some actions
+                    if (show_intems_found == true)
+                    {
+                        show_intems_found = false;
+                    }
+                    else
+                    {
+                        show_intems_found = true;
+                    }
+                }
+
+                if (show_intems_found) {
+                    static int item_current = 1;
+                    std::vector<const char*> items_vec;
+
+                    static const char* arr[100];
+                    std::copy(items_vec.begin(), items_vec.end(), arr);
+
+                    ImGui::ListBox("List on Search", &item_current, arr, items_vec.size(), 5);
                 }
             }
 
@@ -207,7 +229,7 @@ int main(int, char**)
                 static char name[NAME_SIZE] = "";
                 ImGui::InputTextWithHint("FindToRemove", "The name of the product to search", name, IM_ARRAYSIZE(name));
                 ImGui::SameLine();
-                if (ImGui::Button("Search"))
+                if (ImGui::Button("Search To Remove"))
                 {
                     // Take some actions
                 }
@@ -226,7 +248,7 @@ int main(int, char**)
                 static char name[NAME_SIZE] = "";
                 ImGui::InputTextWithHint("FindToChange", "The name of the product to search", name, IM_ARRAYSIZE(name));
                 ImGui::SameLine();
-                if (ImGui::Button("Search"))
+                if (ImGui::Button("Search To Change"))
                 {
                     // Take some actions
                 }
