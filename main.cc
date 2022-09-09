@@ -75,6 +75,7 @@ int main(int, char**)
     ::RegisterClassEx(&wc);
     //HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX12 Example"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
     HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX12 Example"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
+    Market<10, 10, 10> mkt_container;
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))
@@ -157,32 +158,31 @@ int main(int, char**)
 
             if (ImGui::CollapsingHeader("Search"))
             {
-                static char name[NAME_SIZE] = "";
-                static const char** items_arr = new const char* [20];
-                static bool show_intems_found = false;
+                static char sNameToSearch[NAME_SIZE] = "";
+                static bool sShowItemsFoundInSearch = false;
 
-                ImGui::InputTextWithHint("Find", "The name of the product to search", name, IM_ARRAYSIZE(name));
+                ImGui::InputTextWithHint("Find", "The name of the product to search", sNameToSearch, IM_ARRAYSIZE(sNameToSearch));
                 ImGui::SameLine();
                 if (ImGui::Button("Search On Market"))
                 {
-                    if (show_intems_found == true)
+                    if (sShowItemsFoundInSearch == true)
                     {
-                        show_intems_found = false;
+                        sShowItemsFoundInSearch = false;
                     }
                     else
                     {
-                        show_intems_found = true;
+                        sShowItemsFoundInSearch = true;
                     }
                 }
 
-                if (show_intems_found) {
-                    static int item_current = 1;
-                    std::vector<const char*> items_vec;
+                if (sShowItemsFoundInSearch) {
+                    static int sCurrentItemInSearch = 1;
+                    std::vector<const char*> sItemsVecInSearch;
 
-                    static const char* arr[100];
-                    std::copy(items_vec.begin(), items_vec.end(), arr);
+                    static const char* sItemsArrInSearch[100];
+                    std::copy(sItemsVecInSearch.begin(), sItemsVecInSearch.end(), sItemsArrInSearch);
 
-                    ImGui::ListBox("List on Search", &item_current, arr, items_vec.size(), 5);
+                    ImGui::ListBox("List on Search", &sCurrentItemInSearch, sItemsArrInSearch, sItemsVecInSearch.size(), 5);
                 }
             }
 
@@ -200,8 +200,8 @@ int main(int, char**)
                 ImGui::InputTextWithHint("Name", "The name of the product", str_name, IM_ARRAYSIZE(str_name));
                 ImGui::InputTextWithHint("Description", "The description of the product", str_descript, IM_ARRAYSIZE(str_descript));
                 ImGui::InputTextWithHint("Brand", "The brand of the product", str_brand, IM_ARRAYSIZE(str_brand));
-                ImGui::DateChooser("Choose Expiration Date", expirationdate, "%m/%d/%Y", false, (bool*)0, "|", "|", "|", "|");
-                ImGui::DateChooser("Choose Manufacturing Date", manufacturingdate, "%m/%d/%Y", false, (bool*)0, "|", "|", "|", "|");
+                ImGui::DateChooser("Choose Expiration Date", expirationdate, "%m/%d/%Y", false, (bool*)0);
+                ImGui::DateChooser("Choose Manufacturing Date", manufacturingdate, "%m/%d/%Y", false, (bool*)0);
                 ImGui::InputInt("Choose The Lote", &lote);
                 ImGui::InputDouble("Choose The Price US$", &price);
                 if (ImGui::Button("Push"))
@@ -226,41 +226,72 @@ int main(int, char**)
 
             if (ImGui::CollapsingHeader("Remove"))
             {
-                static char name[NAME_SIZE] = "";
-                ImGui::InputTextWithHint("FindToRemove", "The name of the product to search", name, IM_ARRAYSIZE(name));
-                ImGui::SameLine();
-                if (ImGui::Button("Search To Remove"))
-                {
-                    // Take some actions
-                }
-                // If Found
-                {
-                    // Take some actions
-                }
-                // After selected
-                {
+                static char sNameToRemove[NAME_SIZE] = "";
+                static bool sShowItemsFoundInRemove = false;
 
+                ImGui::InputTextWithHint("Remove Of Market", "The name of the product to remove", sNameToRemove, IM_ARRAYSIZE(sNameToRemove));
+                ImGui::SameLine();
+                if (ImGui::Button("Delete"))
+                {
+                    if (sShowItemsFoundInRemove == true)
+                    {
+                        sShowItemsFoundInRemove = false;
+                    }
+                    else
+                    {
+                        sShowItemsFoundInRemove = true;
+                    }
+                }
+
+                if (sShowItemsFoundInRemove) {
+                    static int sCurrentItemInRemove = 1;
+                    std::vector<const char*> sItemsVecInRemove;
+
+                    static const char* sItemsArrInRemove[100];
+                    std::copy(sItemsVecInRemove.begin(), sItemsVecInRemove.end(), sItemsArrInRemove);
+
+                    ImGui::ListBox("List on Remove", &sCurrentItemInRemove, sItemsArrInRemove, sItemsVecInRemove.size(), 5);
+                    
+                    if (ImGui::Button("Sure Remove Selected"))
+                    {
+
+                    }
                 }
             }
 
             if (ImGui::CollapsingHeader("Change"))
             {
-                static char name[NAME_SIZE] = "";
-                ImGui::InputTextWithHint("FindToChange", "The name of the product to search", name, IM_ARRAYSIZE(name));
+                static char sNameToChange[NAME_SIZE] = "";
+                static bool sShowItemsFoundInChange = false;
+
+                ImGui::InputTextWithHint("Change On Market", "The name of the product to change", sNameToChange, IM_ARRAYSIZE(sNameToChange));
                 ImGui::SameLine();
-                if (ImGui::Button("Search To Change"))
+                if (ImGui::Button("Modify"))
                 {
-                    // Take some actions
+                    if (sShowItemsFoundInChange == true)
+                    {
+                        sShowItemsFoundInChange = false;
+                    }
+                    else
+                    {
+                        sShowItemsFoundInChange = true;
+                    }
                 }
-                // If Found
-                {
-                    // Take some actions
-                }
-                // After selected
-                {
 
-                }
+                if (sShowItemsFoundInChange) {
+                    static int sCurrentItemInChange = 1;
+                    std::vector<const char*> sItemsVecInChange;
 
+                    static const char* sItemsArrInChange[100];
+                    std::copy(sItemsVecInChange.begin(), sItemsVecInChange.end(), sItemsArrInChange);
+
+                    ImGui::ListBox("List on Change", &sCurrentItemInChange, sItemsArrInChange, sItemsVecInChange.size(), 5);
+
+                    if (ImGui::Button("Sure Change Selected"))
+                    {
+
+                    }
+                }
             }
 
             if (show_credits)
