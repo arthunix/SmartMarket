@@ -3,6 +3,7 @@
 #define INDEX_H
 
 #include <cstring>
+#include <list>
 
 #include "rbtree.h"
 #include "Product.h"
@@ -36,11 +37,11 @@ private:
         return (structio_t*)ptr;
     }
 
-    rbnode* FindIndexNode(const char* NameToLookup)
+    list* FindIndexNodes(const char* NameToLookup)
     {
         structio_t lStructIO;
         strcpy_s(lStructIO.mName, NAME_SIZE, NameToLookup);
-        return rbtree_search(pIndexTree, &lStructIO);
+        return rbtree_search_array(pIndexTree, &lStructIO);
     }
 
 public:
@@ -54,33 +55,21 @@ public:
         rbtree_destroy(pIndexTree);
     }
 
-    structio_t LookupAtIndex(const char* NameToLookup)
+    list* LookupAtIndex(const char* NameToLookup)
     {
-        rbnode* NodeFound = FindIndexNode(NameToLookup);
-
-        return *((structio_t*)((*NodeFound).data));
+        return FindIndexNodes(NameToLookup);
     }
 
-    bool InsertToIndex(structio_t structio)
+    void InsertToIndex(structio_t structio)
     {
         structio_t* pNewStructIO = safe_structio_malloc();
         *pNewStructIO = structio;
-        return rbtree_insert(pIndexTree, pNewStructIO);
+        rbtree_insert(pIndexTree, pNewStructIO);
     }
 
-    bool RemoveFromIndex(const char* NameToLookup)
+    void RemoveFromIndex(rbnode* NodeToRemove)
     {
-        rbnode* NodeFound = FindIndexNode(NameToLookup);
-
-        if (NodeFound)
-        {
-            rbtree_delete(pIndexTree, NodeFound);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        rbtree_delete(pIndexTree, NodeToRemove);
     }
 };
 
