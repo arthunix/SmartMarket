@@ -17,8 +17,9 @@
 #include "Market.h"
 #include "imguidatechooser.h"
 
-/* I will define it on the Solution Proprieties by the way at the end */
-//#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#ifndef _DEBUG
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#endif // !_DEBUG
 
 #ifdef _DEBUG
 #define DX12_ENABLE_DEBUG_LAYER
