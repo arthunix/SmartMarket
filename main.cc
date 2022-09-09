@@ -18,7 +18,7 @@
 #include "imguidatechooser.h"
 
 /* I will define it on the Solution Proprieties by the way at the end */
-#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+//#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 
 #ifdef _DEBUG
 #define DX12_ENABLE_DEBUG_LAYER
@@ -121,6 +121,7 @@ int main(int, char**)
     // Our state
     bool show_demo_window = true;
     bool show_another_window = false;
+    bool show_credits = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Main loop
@@ -153,8 +154,8 @@ int main(int, char**)
 
             if (ImGui::CollapsingHeader("Search"))
             {
-                static char str1[NAME_SIZE] = "";
-                ImGui::InputTextWithHint(" ", "The name of the product to search", str1, IM_ARRAYSIZE(str1));
+                static char name[NAME_SIZE] = "";
+                ImGui::InputTextWithHint("Find", "The name of the product to search", name, IM_ARRAYSIZE(name));
                 ImGui::SameLine();
                 if (ImGui::Button("Search"))
                 {
@@ -166,30 +167,93 @@ int main(int, char**)
             {
                 static char str_name[NAME_SIZE] = "";
                 static char str_descript[DESCRIPTION_SIZE] = "";
-                static char str_manuf[BRAND_SIZE] = "";
+                static char str_brand[BRAND_SIZE] = "";
                 static tm additiondate = ImGui::GetDateZero();
                 static tm expirationdate = ImGui::GetDateZero();
                 static tm manufacturingdate = ImGui::GetDateZero();
+                static int lote = 12345;
+                static double price = 100.00;
 
-                ImGui::InputTextWithHint(" ", "The name of the product", str_name, IM_ARRAYSIZE(str_name));
-                ImGui::InputTextWithHint(" ", "The description of the product", str_descript, IM_ARRAYSIZE(str_descript));
-                ImGui::InputTextWithHint(" ", "The brand of the product", str_manuf, IM_ARRAYSIZE(str_manuf));
-                ImGui::DateChooser("Choose Addition Date", additiondate, "%m/%d/%Y", false, (bool*)0, "|", "|", "|", "|");
+                ImGui::InputTextWithHint("Name", "The name of the product", str_name, IM_ARRAYSIZE(str_name));
+                ImGui::InputTextWithHint("Description", "The description of the product", str_descript, IM_ARRAYSIZE(str_descript));
+                ImGui::InputTextWithHint("Brand", "The brand of the product", str_brand, IM_ARRAYSIZE(str_brand));
                 ImGui::DateChooser("Choose Expiration Date", expirationdate, "%m/%d/%Y", false, (bool*)0, "|", "|", "|", "|");
                 ImGui::DateChooser("Choose Manufacturing Date", manufacturingdate, "%m/%d/%Y", false, (bool*)0, "|", "|", "|", "|");
+                ImGui::InputInt("Choose The Lote", &lote);
+                ImGui::InputDouble("Choose The Price US$", &price);
+                if (ImGui::Button("Push"))
+                {
+                    // Take some actions
+                }
+
+#ifdef _DEBUG
+                std::cout << "TRACE RING 3 : NAME AT INSERT         : " << str_name << std::endl;
+                std::cout << "TRACE RING 3 : DESCRIPTION AT INSERT  : " << str_descript << std::endl;
+                std::cout << "TRACE RING 3 : BRAND AT INSERT        : " << str_brand << std::endl;
+                std::cout << "TRACE RING 3 : PRICE AT INSERT        : " << price << std::endl;
+                std::cout << "TRACE RING 3 : LOTE AT INSERT         : " << lote << std::endl;
+
+                char buff[80];
+                asctime_s(buff, sizeof(buff), &expirationdate);
+                std::cout << "TRACE RING 3 : EXP. DATE AT INSERT    : " << buff << std::endl;
+                asctime_s(buff, sizeof(buff), &manufacturingdate);
+                std::cout << "TRACE RING 3 : MAN. DATE AT INSERT    : " << buff << std::endl;
+#endif // _DEBUG
             }
 
             if (ImGui::CollapsingHeader("Remove"))
             {
-                static char str2[NAME_SIZE] = "";
-                ImGui::InputTextWithHint(" ", "The name of the product to search", str2, IM_ARRAYSIZE(str2));
+                static char name[NAME_SIZE] = "";
+                ImGui::InputTextWithHint("FindToRemove", "The name of the product to search", name, IM_ARRAYSIZE(name));
+                ImGui::SameLine();
+                if (ImGui::Button("Search"))
+                {
+                    // Take some actions
+                }
+                // If Found
+                {
+                    // Take some actions
+                }
+                // After selected
+                {
+
+                }
             }
 
             if (ImGui::CollapsingHeader("Change"))
             {
-                static char str2[NAME_SIZE] = "";
-                ImGui::InputTextWithHint(" ", "The name of the product to search", str2, IM_ARRAYSIZE(str2));
+                static char name[NAME_SIZE] = "";
+                ImGui::InputTextWithHint("FindToChange", "The name of the product to search", name, IM_ARRAYSIZE(name));
+                ImGui::SameLine();
+                if (ImGui::Button("Search"))
+                {
+                    // Take some actions
+                }
+                // If Found
+                {
+                    // Take some actions
+                }
+                // After selected
+                {
+
+                }
+
             }
+
+            if (show_credits)
+            {
+                ImGui::Begin("Credits", &show_another_window);
+                ImGui::Text("Copyright (c) 2022, Arthur Eugenio Silverio. All rights reserved.");
+                ImGui::Text("Copyright (c) 2022 Caroline Elisa Duarte de Souza. All rights reserved.");
+                ImGui::Text("Copyright (c) 2022 Anderson Antonio de Melo. All rights reserved.");
+                ImGui::Text("BSD 2-Clause Simplified License");
+                ImGui::Text("https://github.com/arthunix/SmartMarket");
+                if (ImGui::Button("Close Credits"))
+                    show_credits = false;
+                ImGui::End();
+            }
+
+            if (ImGui::Button("Show Credits")) show_credits = true;
 
             ImGui::End();
         }
