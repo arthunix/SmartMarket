@@ -72,9 +72,9 @@ unsigned int Lote,
 double Price
 )
 {
-	memcpy(mName, Name, NAME_SIZE);
-	memcpy(mDescription, Description, DESCRIPTION_SIZE);
-	memcpy(mBrand, Brand, BRAND_SIZE);
+	strcpy_s(mName, NAME_SIZE, Name);
+	strcpy_s(mDescription, DESCRIPTION_SIZE, Description);
+	strcpy_s(mBrand, BRAND_SIZE, Brand);
 	mExpirationDate = ExpirationDate;
 	mManufacturingDate = ManufacturingDate;
 	time_t currTime; mAdditionDate = time(&currTime);
@@ -84,7 +84,7 @@ double Price
 
 Product::~Product()
 {
-	std::cerr << "WARING RING 5 : Destructing the object" << std::endl;
+	std::cerr << "TRACE RING 5 : Destructing the object" << std::endl;
 }
 
 const char* Product::getName()
