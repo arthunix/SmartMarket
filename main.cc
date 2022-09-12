@@ -75,7 +75,7 @@ int main(int, char**)
     ::RegisterClassEx(&wc);
     //HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX12 Example"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
     HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX12 Example"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
-    //Market<10, 10, 10> mkt_container;
+    Market<10, 10, 10> mkt_container;
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))
@@ -162,6 +162,8 @@ int main(int, char**)
             {
                 static char sNameToSearch[NAME_SIZE] = "";
                 static bool sShowItemsFoundInSearch = false;
+                static list* sFound;
+                std::vector<const char*> sItemsVecInSearch;
 
                 ImGui::InputTextWithHint("Find", "The name of the product to search", sNameToSearch, IM_ARRAYSIZE(sNameToSearch));
                 ImGui::SameLine();
@@ -174,12 +176,12 @@ int main(int, char**)
                     else
                     {
                         sShowItemsFoundInSearch = true;
+                        sItemsVecInSearch = mkt_container.LookupForAProducts(sNameToSearch);
                     }
                 }
 
                 if (sShowItemsFoundInSearch) {
                     static int sCurrentItemInSearch = 1;
-                    std::vector<const char*> sItemsVecInSearch;
 
                     static const char* sItemsArrInSearch[100];
                     std::copy(sItemsVecInSearch.begin(), sItemsVecInSearch.end(), sItemsArrInSearch);
@@ -193,7 +195,7 @@ int main(int, char**)
                 static char sNameToInsert[NAME_SIZE] = "";
                 static char sDescriptToInsert[DESCRIPTION_SIZE] = "";
                 static char sBrandToInsert[BRAND_SIZE] = "";
-                static tm sAdditionDateToInsert = ImGui::GetDateZero();
+                //static time_t sAdditionDateToInsert = time(NULL);
                 static tm sExpirationDateToInsert = ImGui::GetDateZero();
                 static tm sManufacturingDateToInsert = ImGui::GetDateZero();
                 static int sLoteToInsert = 12345;
@@ -206,9 +208,22 @@ int main(int, char**)
                 ImGui::DateChooser("Choose Manufacturing Date", sManufacturingDateToInsert, "%m/%d/%Y", false, (bool*)0);
                 ImGui::InputInt("Choose The Lote", &sLoteToInsert);
                 ImGui::InputDouble("Choose The Price US$", &sPriceToInsert);
+
                 if (ImGui::Button("Push"))
                 {
-                    // Take some actions
+                    Product sProductWillBePushed(
+                        sNameToInsert, sDescriptToInsert, 
+                        sBrandToInsert,
+                        mktime(&sExpirationDateToInsert), 
+                        mktime(&sManufacturingDateToInsert), 
+                        sLoteToInsert, 
+                        sPriceToInsert);
+
+                    sProductWillBePushed.printProduct();
+
+                    std::cout << "TRACE RING 3 : INSERT - PUSHED " << std::endl;
+
+                    mkt_container.insertProduct(sProductWillBePushed);
                 }
 
 #ifdef _DEBUG
