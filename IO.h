@@ -26,12 +26,12 @@ public:
     ~IO();
 
     void RemoveFromInventory();
-    void InsertToInventory(Product product);
+    long long int InsertToInventory(Product product);
     void ModifyFromInventory();
     Product SeekOnInventory();
 
     void RemoveFromShelf();
-    void InsertToShelf(Product product);
+    long long int InsertToShelf(Product product);
     void ModifyFromShelf();
     Product SeekOnShelf();
 
