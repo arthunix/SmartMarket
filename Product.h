@@ -24,7 +24,7 @@ private:
 	unsigned int mLote;
 	// BarCode _barcode; /* Stands for computer vision I think */
 public:
-	Product(char Name[], char Description[], char Brand[], time_t ExpirationDate, 
+	Product(char Name[NAME_SIZE], char Description[DESCRIPTION_SIZE], char Brand[BRAND_SIZE], time_t ExpirationDate,
 		time_t ManufacturingDate, unsigned int Lote, double Price);
 
 	~Product();
@@ -60,12 +60,37 @@ public:
 	double getPrice();
 
 	void setPrice(double Price);
+
+	void printProduct()
+	{
+		std::cout << "Name: " << mName << std::endl;
+		std::cout << "Description: " << mDescription << std::endl;
+		std::cout << "Brand: " << mBrand << std::endl;
+
+		struct tm  when;
+		char buff[80];
+
+		localtime_s(&when, &mExpirationDate);
+		asctime_s(buff, sizeof(buff), &when);
+		printf("Expiration time is %s", buff);
+
+		localtime_s(&when, &mManufacturingDate);
+		asctime_s(buff, sizeof(buff), &when);
+		printf("Expiration time is %s", buff);
+
+		localtime_s(&when, &mAdditionDate);
+		asctime_s(buff, sizeof(buff), &when);
+		printf("Expiration time is %s", buff);
+
+		std::cout << "Lote: " << mLote << std::endl;
+		std::cout << "Price: " << mPrice << std::endl;
+	}
 };
 
 Product::Product (
-char Name[], 
-char Description[], 
-char Brand[], 
+char Name[NAME_SIZE], 
+char Description[DESCRIPTION_SIZE],
+char Brand[BRAND_SIZE],
 time_t ExpirationDate, 
 time_t ManufacturingDate,
 unsigned int Lote,
