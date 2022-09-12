@@ -75,7 +75,7 @@ int main(int, char**)
     ::RegisterClassEx(&wc);
     //HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX12 Example"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
     HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX12 Example"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
-    Market<10, 10, 10> mkt_container;
+    //Market<10, 10, 10> mkt_container;
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))
@@ -190,38 +190,38 @@ int main(int, char**)
 
             if (ImGui::CollapsingHeader("Insert"))
             {
-                static char str_name[NAME_SIZE] = "";
-                static char str_descript[DESCRIPTION_SIZE] = "";
-                static char str_brand[BRAND_SIZE] = "";
-                static tm additiondate = ImGui::GetDateZero();
-                static tm expirationdate = ImGui::GetDateZero();
-                static tm manufacturingdate = ImGui::GetDateZero();
-                static int lote = 12345;
-                static double price = 100.00;
+                static char sNameToInsert[NAME_SIZE] = "";
+                static char sDescriptToInsert[DESCRIPTION_SIZE] = "";
+                static char sBrandToInsert[BRAND_SIZE] = "";
+                static tm sAdditionDateToInsert = ImGui::GetDateZero();
+                static tm sExpirationDateToInsert = ImGui::GetDateZero();
+                static tm sManufacturingDateToInsert = ImGui::GetDateZero();
+                static int sLoteToInsert = 12345;
+                static double sPriceToInsert = 100.00;
 
-                ImGui::InputTextWithHint("Name", "The name of the product", str_name, IM_ARRAYSIZE(str_name));
-                ImGui::InputTextWithHint("Description", "The description of the product", str_descript, IM_ARRAYSIZE(str_descript));
-                ImGui::InputTextWithHint("Brand", "The brand of the product", str_brand, IM_ARRAYSIZE(str_brand));
-                ImGui::DateChooser("Choose Expiration Date", expirationdate, "%m/%d/%Y", false, (bool*)0);
-                ImGui::DateChooser("Choose Manufacturing Date", manufacturingdate, "%m/%d/%Y", false, (bool*)0);
-                ImGui::InputInt("Choose The Lote", &lote);
-                ImGui::InputDouble("Choose The Price US$", &price);
+                ImGui::InputTextWithHint("Name", "The name of the product", sNameToInsert, IM_ARRAYSIZE(sNameToInsert));
+                ImGui::InputTextWithHint("Description", "The description of the product", sDescriptToInsert, IM_ARRAYSIZE(sDescriptToInsert));
+                ImGui::InputTextWithHint("Brand", "The brand of the product", sBrandToInsert, IM_ARRAYSIZE(sBrandToInsert));
+                ImGui::DateChooser("Choose Expiration Date", sExpirationDateToInsert, "%m/%d/%Y", false, (bool*)0);
+                ImGui::DateChooser("Choose Manufacturing Date", sManufacturingDateToInsert, "%m/%d/%Y", false, (bool*)0);
+                ImGui::InputInt("Choose The Lote", &sLoteToInsert);
+                ImGui::InputDouble("Choose The Price US$", &sPriceToInsert);
                 if (ImGui::Button("Push"))
                 {
                     // Take some actions
                 }
 
 #ifdef _DEBUG
-                std::cout << "TRACE RING 3 : NAME AT INSERT         : " << str_name << std::endl;
-                std::cout << "TRACE RING 3 : DESCRIPTION AT INSERT  : " << str_descript << std::endl;
-                std::cout << "TRACE RING 3 : BRAND AT INSERT        : " << str_brand << std::endl;
-                std::cout << "TRACE RING 3 : PRICE AT INSERT        : " << price << std::endl;
-                std::cout << "TRACE RING 3 : LOTE AT INSERT         : " << lote << std::endl;
+                std::cout << "TRACE RING 3 : NAME AT INSERT         : " << sNameToInsert << std::endl;
+                std::cout << "TRACE RING 3 : DESCRIPTION AT INSERT  : " << sDescriptToInsert << std::endl;
+                std::cout << "TRACE RING 3 : BRAND AT INSERT        : " << sBrandToInsert << std::endl;
+                std::cout << "TRACE RING 3 : PRICE AT INSERT        : " << sPriceToInsert << std::endl;
+                std::cout << "TRACE RING 3 : LOTE AT INSERT         : " << sLoteToInsert << std::endl;
 
                 char buff[80];
-                asctime_s(buff, sizeof(buff), &expirationdate);
+                asctime_s(buff, sizeof(buff), &sExpirationDateToInsert);
                 std::cout << "TRACE RING 3 : EXP. DATE AT INSERT    : " << buff << std::endl;
-                asctime_s(buff, sizeof(buff), &manufacturingdate);
+                asctime_s(buff, sizeof(buff), &sManufacturingDateToInsert);
                 std::cout << "TRACE RING 3 : MAN. DATE AT INSERT    : " << buff << std::endl;
 #endif // _DEBUG
             }
