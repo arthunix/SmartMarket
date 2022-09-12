@@ -66,22 +66,17 @@ public:
 		std::cout << "Name: " << mName << std::endl;
 		std::cout << "Description: " << mDescription << std::endl;
 		std::cout << "Brand: " << mBrand << std::endl;
-
 		struct tm  when;
 		char buff[80];
-
 		localtime_s(&when, &mExpirationDate);
 		asctime_s(buff, sizeof(buff), &when);
 		printf("Expiration time is %s", buff);
-
 		localtime_s(&when, &mManufacturingDate);
 		asctime_s(buff, sizeof(buff), &when);
 		printf("Expiration time is %s", buff);
-
 		localtime_s(&when, &mAdditionDate);
 		asctime_s(buff, sizeof(buff), &when);
 		printf("Expiration time is %s", buff);
-
 		std::cout << "Lote: " << mLote << std::endl;
 		std::cout << "Price: " << mPrice << std::endl;
 	}
