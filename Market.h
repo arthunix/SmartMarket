@@ -20,7 +20,7 @@ public:
 	Market() {};
 	~Market() {};
 
-	std::vector<const char*> LookupForAProducts(const char* name);
+	std::vector<const char*> &LookupForAProducts(const char* name, std::vector<const char*> &ret);
 
 	Product getProduct(structio_t whereIs);
 	void changeProduct(structio_t whereIs);
@@ -47,11 +47,10 @@ inline void Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>
 }
 
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
-std::vector<const char*> 
-Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>
-::LookupForAProducts(const char* name)
+inline std::vector<const char*>& Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>
+::LookupForAProducts( const char* name , std::vector<const char*> &ret )
 {
-	std::vector<const char*> ret = mIndex.LookupAtIndexVec( name );
+	ret = mIndex.LookupAtIndexVec( name, ret );
 
 	return ret;
 }

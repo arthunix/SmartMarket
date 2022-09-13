@@ -78,8 +78,7 @@ public:
         return FindIndexNodes(NameToLookup);
     }
 
-    std::vector<const char*> LookupAtIndexVec( const char* NameToLookup) {
-        std::vector<const char*> ret;
+    std::vector<const char*> &LookupAtIndexVec( const char* NameToLookup, std::vector<const char*> &ret) {
         structio_t lStructIO;
         strcpy_s(lStructIO.mName, NAME_SIZE, NameToLookup);
 
