@@ -163,7 +163,8 @@ int main(int, char**)
                 static char sNameToSearch[NAME_SIZE] = "";
                 static bool sShowItemsFoundInSearch = false;
                 static list* sFound;
-                std::vector<const char*> sItemsVecInSearch;
+                static std::vector<const char*> sItemsVecInSearch;
+                static const char* sItemsArrInSearch[50];
 
                 ImGui::InputTextWithHint("Find", "The name of the product to search", sNameToSearch, IM_ARRAYSIZE(sNameToSearch));
                 ImGui::SameLine();
@@ -176,15 +177,17 @@ int main(int, char**)
                     else
                     {
                         sShowItemsFoundInSearch = true;
-                        sItemsVecInSearch = mkt_container.LookupForAProducts(sNameToSearch);
+                        sItemsVecInSearch = mkt_container.LookupForAProducts(sNameToSearch, sItemsVecInSearch);
+
+                        for (int i = 0; i < sItemsVecInSearch.size(); i++)
+                        {
+                            sItemsArrInSearch[i] = sItemsVecInSearch[i];
+                        }
                     }
                 }
 
                 if (sShowItemsFoundInSearch) {
                     static int sCurrentItemInSearch = 1;
-
-                    static const char* sItemsArrInSearch[100];
-                    std::copy(sItemsVecInSearch.begin(), sItemsVecInSearch.end(), sItemsArrInSearch);
 
                     ImGui::ListBox("List on Search", &sCurrentItemInSearch, sItemsArrInSearch, sItemsVecInSearch.size(), 5);
                 }
