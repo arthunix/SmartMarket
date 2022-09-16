@@ -51,6 +51,9 @@
     <ClCompile Include="external\libcutils\list.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Index.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Index.h">

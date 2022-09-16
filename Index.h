@@ -3,25 +3,21 @@
 #define INDEX_H
 
 #include <cstring>
-#include <list>
 #include <vector>
 
 #include "rbtree.h"
 #include "Product.h"
 
-// IMPORTANT DEFINITIONS FOR THE INDEX
-// Defining basic structures
-typedef unsigned long long int rrn_t;
 struct structio_t {
-    bool mAmIonInventory; /* If not I am on the shelf */
-    char mName[NAME_SIZE]; /* I think we don't need to store the entire name */
-    long long int mOffset; /* Where we should look for in an IO operation */
+    bool mAmIonInventory;
+    char mName[NAME_SIZE];
+    unsigned int mLote;
+    time_t mManufacturingDate;
+    long long int mOffset;
 };
-// Defining necessary functions
 static void structio_t_destroy(void* a);
 static int structio_t_cmp(const void* a, const void* b);
 static void structio_t_print(const void* a);
-
 
 class Index {
 private:
@@ -30,7 +26,8 @@ private:
     structio_t* safe_structio_malloc()
     {
         void* ptr = new structio_t;
-        if (!ptr) {
+        if (!ptr)
+        {
             fprintf(stderr, "At [%s:%ul] unable to allocate (%ul bytes) of memory\n",
                 __FILE__, __LINE__, (unsigned long)sizeof(structio_t));
             exit(EXIT_FAILURE);
@@ -38,24 +35,17 @@ private:
         return (structio_t*)ptr;
     }
 
-    list* FindIndexNodes(const char* NameToLookup)
-    {
-        structio_t lStructIO;
-        strcpy_s(lStructIO.mName, NAME_SIZE, NameToLookup);
-        return rbtree_search_array(pIndexTree, &lStructIO);
-    }
-
     /* This is so gross I'm about to vomit on the screen but don't you dare say it's bad I just
     took the guts out of the body so I can analyze the evidence instead of doing an MRI this 
     should be an ORACLE closed box, but we're not at the best time */
-    void _LookupAtIndexVec(const rbnode* x, const void* data, std::vector<const char*> &found) {
+    void _LookupAtIndexVec(const rbnode* x, const void* data, std::vector<structio_t> &found) {
 
         if (x != pIndexTree->nil)
         {
             if (pIndexTree->cmpfun(x->data, data) == 0)
             {
                 structio_t structData = *(structio_t*)x->data;
-                found.push_back(structData.mName);
+                found.push_back(structData);
             }
             _LookupAtIndexVec(x->left, data, found);
             _LookupAtIndexVec(x->right, data, found);
@@ -73,18 +63,11 @@ public:
         rbtree_destroy(pIndexTree);
     }
 
-    list* LookupAtIndex(const char* NameToLookup)
-    {
-        return FindIndexNodes(NameToLookup);
-    }
-
-    std::vector<const char*> &LookupAtIndexVec( const char* NameToLookup, std::vector<const char*> &ret) {
+    void LookupAtIndexVec( const char* NameToLookup, std::vector<structio_t> &ret) {
         structio_t lStructIO;
         strcpy_s(lStructIO.mName, NAME_SIZE, NameToLookup);
 
         _LookupAtIndexVec(pIndexTree->root->left, &lStructIO, ret);
-
-        return ret;
     }
 
     void InsertToIndex(structio_t structio)
@@ -104,6 +87,29 @@ public:
         rbtree_print_inorder(pIndexTree);
     }
 };
+
+bool VectorOfStructIOCharGetter(void* data, int index, const char** output)
+{
+    //char buff[80]; struct tm when;
+    //structio_t* str_io = (structio_t*)data;
+    //structio_t& crr_str_io = str_io[index];
+    //_localtime64_s(&when, &crr_str_io.mManufacturingDate);
+    //asctime_s(buff, sizeof(buff), &when);
+    //std::string output_string;
+    //output_string.append("Name: ");
+    //output_string.append(crr_str_io.mName);
+    //output_string.append(" Lote: ");
+    //output_string.append(std::to_string(crr_str_io.mLote));
+    //output_string.append(" Manufacturing Date: ");
+    //output_string.append(buff);
+    //*output = output_string.c_str();
+    
+    structio_t* str_io = (structio_t*)data;
+    structio_t& crr_str_io = str_io[index];
+    *output = crr_str_io.mName;
+
+    return true;
+}
 
 void structio_t_destroy(void* struct_io)
 {
@@ -128,7 +134,8 @@ int structio_t_cmp(const void* a, const void* b)
 
 void structio_t_print(const void* struct_io) {
     printf("Name = %s / ", (*(structio_t*)struct_io).mName);
-    printf("Offset = %lli", (*(structio_t*)struct_io).mOffset);
+    printf("Offset = %lli / ", (*(structio_t*)struct_io).mOffset);
+    printf("Lote = %ui", (*(structio_t*)struct_io).mLote);
     fflush(NULL);
 }
 

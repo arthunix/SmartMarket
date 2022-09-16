@@ -75,6 +75,7 @@ int main(int, char**)
     ::RegisterClassEx(&wc);
     //HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX12 Example"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
     HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX12 Example"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
+
     Market<10, 10, 10> mkt_container;
 
     // Initialize Direct3D
@@ -162,12 +163,10 @@ int main(int, char**)
             {
                 static char sNameToSearch[NAME_SIZE] = "";
                 static bool sShowItemsFoundInSearch = false;
-                static list* sFound;
-                static std::vector<const char*> sItemsVecInSearch;
-                static const char* sItemsArrInSearch[50];
 
                 ImGui::InputTextWithHint("Find", "The name of the product to search", sNameToSearch, IM_ARRAYSIZE(sNameToSearch));
                 ImGui::SameLine();
+
                 if (ImGui::Button("Search On Market"))
                 {
                     if (sShowItemsFoundInSearch == true)
@@ -177,19 +176,26 @@ int main(int, char**)
                     else
                     {
                         sShowItemsFoundInSearch = true;
-                        sItemsVecInSearch = mkt_container.LookupForAProducts(sNameToSearch, sItemsVecInSearch);
 
-                        for (int i = 0; i < sItemsVecInSearch.size(); i++)
-                        {
-                            sItemsArrInSearch[i] = sItemsVecInSearch[i];
-                        }
+                        std::cout << "TRACE RING 3 : SEARCHING FOR VALUES IN SEARCH : " << std::endl;
                     }
                 }
 
-                if (sShowItemsFoundInSearch) {
+                if (sShowItemsFoundInSearch)
+                {
                     static int sCurrentItemInSearch = 1;
 
-                    ImGui::ListBox("List on Search", &sCurrentItemInSearch, sItemsArrInSearch, sItemsVecInSearch.size(), 5);
+                    std::vector<structio_t> fd = mkt_container.LookupForAProducts(sNameToSearch);
+
+                    ImGui::ListBox(
+                        "ListBox Of Found In Search",
+                        &sCurrentItemInSearch,
+                        VectorOfStructIOCharGetter,
+                        fd.data(), 
+                        (int)fd.size()
+                    );
+                    
+                    std::cout << "TRACE RING 3 : LISTING VALUES IN SEARCH : " << std::endl;
                 }
             }
 
@@ -264,13 +270,6 @@ int main(int, char**)
                 }
 
                 if (sShowItemsFoundInRemove) {
-                    static int sCurrentItemInRemove = 1;
-                    std::vector<const char*> sItemsVecInRemove;
-
-                    static const char* sItemsArrInRemove[100];
-                    std::copy(sItemsVecInRemove.begin(), sItemsVecInRemove.end(), sItemsArrInRemove);
-
-                    ImGui::ListBox("List on Remove", &sCurrentItemInRemove, sItemsArrInRemove, sItemsVecInRemove.size(), 5);
                     
                     if (ImGui::Button("Sure Remove Selected"))
                     {
@@ -305,7 +304,7 @@ int main(int, char**)
                     static const char* sItemsArrInChange[100];
                     std::copy(sItemsVecInChange.begin(), sItemsVecInChange.end(), sItemsArrInChange);
 
-                    ImGui::ListBox("List on Change", &sCurrentItemInChange, sItemsArrInChange, sItemsVecInChange.size(), 5);
+                    //ImGui::ListBox("List on Change", &sCurrentItemInChange, sItemsArrInChange, sItemsVecInChange.size(), 5);
 
                     if (ImGui::Button("Sure Change Selected"))
                     {

@@ -24,8 +24,9 @@ private:
 	unsigned int mLote;
 	// BarCode _barcode; /* Stands for computer vision I think */
 public:
-	Product(char Name[NAME_SIZE], char Description[DESCRIPTION_SIZE], char Brand[BRAND_SIZE], time_t ExpirationDate,
-		time_t ManufacturingDate, unsigned int Lote, double Price);
+	Product(char Name[NAME_SIZE], char Description[DESCRIPTION_SIZE], 
+		char Brand[BRAND_SIZE], time_t ExpirationDate, time_t ManufacturingDate, 
+			unsigned int Lote, double Price);
 
 	~Product();
 

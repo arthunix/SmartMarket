@@ -15,21 +15,38 @@ class Market {
 private:
 	//IO<TNumOfSections,TNumOfShelfsOnSection,TNumOfProductsOnShelf> mIOfs;
 	Index mIndex;
+	std::vector<structio_t> mSearchCointainer;
 
 public:
 	Market() {};
 	~Market() {};
 
-	std::vector<const char*> &LookupForAProducts(const char* name, std::vector<const char*> &ret);
+	//void LookupForAProducts(const char* name, std::vector<const char*> &ret);
 
 	Product getProduct(structio_t whereIs);
 	void changeProduct(structio_t whereIs);
 	void insertProduct(Product toInsert);
 	void removeProduct(structio_t whereIsToRemove);
+
+	void SearchOn(const char* name)
+	{
+		mIndex.LookupAtIndexVec(name, mSearchCointainer);
+	}
+
+	std::vector<structio_t> &LookupForAProducts(const char* name)
+	{
+		mSearchCointainer.clear();
+
+
+		mIndex.LookupAtIndexVec(name, mSearchCointainer);
+
+		return mSearchCointainer;
+	}
 };
 
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
-inline void Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::insertProduct(Product toInsert)
+void Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::
+insertProduct(Product toInsert)
 {
 	//long long int lOffset = InsertToInventory(toInsert);
 
@@ -39,21 +56,15 @@ inline void Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>
 	strcpy_s(lIOStructure.mName, NAME_SIZE, toInsert.getName());
 	lIOStructure.mOffset = 25;
 
+	lIOStructure.mLote = toInsert.getLote();
+
+	lIOStructure.mManufacturingDate = toInsert.getManufacturingDate();
+
 	mIndex.InsertToIndex(lIOStructure);
 
 	mIndex.PrintIndex();
 
 	std::cout << "TRACE RING 3 : INSERT TO INDEX AND FILE - PUSHED " << std::endl;
 }
-
-template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
-inline std::vector<const char*>& Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>
-::LookupForAProducts( const char* name , std::vector<const char*> &ret )
-{
-	ret = mIndex.LookupAtIndexVec( name, ret );
-
-	return ret;
-}
-
 
 #endif // ! MARKET_H
