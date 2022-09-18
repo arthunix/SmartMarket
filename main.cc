@@ -124,7 +124,9 @@ int main(int, char**)
     //IM_ASSERT(font != NULL);
 
     // Our state
+#ifdef _DEBUG
     bool show_demo_window = true;
+#endif // _DEBUG
     bool show_another_window = false;
     bool show_credits = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -155,6 +157,8 @@ int main(int, char**)
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
 #endif // _DEBUG
+        //std::cout << sizeof(Product) << std::endl;
+        //std::cout << sizeof(structio_t) << std::endl;
         
         {
             ImGui::Begin("Smart Market - Main Window");
@@ -176,8 +180,9 @@ int main(int, char**)
                     else
                     {
                         sShowItemsFoundInSearch = true;
-
+#ifdef _DEBUG
                         std::cout << "TRACE RING 3 : SEARCHING FOR VALUES IN SEARCH : " << std::endl;
+#endif // _DEBUG
                     }
                 }
 
@@ -194,8 +199,10 @@ int main(int, char**)
                         fd.data(), 
                         (int)fd.size()
                     );
-                    
+
+#ifdef _DEBUG
                     std::cout << "TRACE RING 3 : LISTING VALUES IN SEARCH : " << std::endl;
+#endif // _DEBUG
                 }
             }
 
@@ -225,11 +232,12 @@ int main(int, char**)
                         mktime(&sExpirationDateToInsert), 
                         mktime(&sManufacturingDateToInsert), 
                         sLoteToInsert, 
-                        sPriceToInsert);
-
+                        sPriceToInsert
+                    );
+#ifdef _DEBUG
                     sProductWillBePushed.printProduct();
-
                     std::cout << "TRACE RING 3 : INSERT - PUSHED " << std::endl;
+#endif // _DEBUG
 
                     mkt_container.insertProduct(sProductWillBePushed);
                 }
@@ -265,28 +273,34 @@ int main(int, char**)
                     else
                     {
                         sShowItemsFoundInRemove = true;
+#ifdef _DEBUG
+                        std::cout << "TRACE RING 3 : SEARCHING FOR VALUES IN REMOVE : " << std::endl;
+#endif // _DEBUG
                     }
                 }
 
                 if (sShowItemsFoundInRemove) {
-
-                    static int sCurrentItemInSearch = 1;
+                    static int sCurrentItemInRemove = 1;
 
                     std::vector<rbnode*> fd = mkt_container.LookupForAProducts(sNameToRemove);
 
                     ImGui::ListBox(
                         "ListBox Of Found In Remove",
-                        &sCurrentItemInSearch,
+                        &sCurrentItemInRemove,
                         VectorOfStructIOCharGetter,
                         fd.data(),
                         (int)fd.size()
                     );
-
+#ifdef _DEBUG
                     std::cout << "TRACE RING 3 : LISTING VALUES IN REMOVE : " << std::endl;
-                    
+#endif // _DEBUG
                     if (ImGui::Button("Sure Remove Selected"))
                     {
-                        mkt_container.removeProduct(fd[sCurrentItemInSearch]);
+#ifdef _DEBUG
+                        std::cout << "TRACE RING 3 : REMOVING PRODUCT : " << std::endl;
+                        structio_t_print(fd[sCurrentItemInRemove]);
+#endif // _DEBUG
+                        mkt_container.removeProduct(fd[sCurrentItemInRemove]);
                     }
                 }
             }
@@ -312,16 +326,50 @@ int main(int, char**)
 
                 if (sShowItemsFoundInChange) {
                     static int sCurrentItemInChange = 1;
-                    std::vector<const char*> sItemsVecInChange;
 
-                    static const char* sItemsArrInChange[100];
-                    std::copy(sItemsVecInChange.begin(), sItemsVecInChange.end(), sItemsArrInChange);
+                    std::vector<rbnode*> fd = mkt_container.LookupForAProducts(sNameToChange);
 
-                    //ImGui::ListBox("List on Change", &sCurrentItemInChange, sItemsArrInChange, sItemsVecInChange.size(), 5);
+                    ImGui::ListBox(
+                        "ListBox Of Found In Remove",
+                        &sCurrentItemInChange,
+                        VectorOfStructIOCharGetter,
+                        fd.data(),
+                        (int)fd.size()
+                    );
+#ifdef _DEBUG
+                    std::cout << "TRACE RING 3 : LISTING VALUES IN CHANGE : " << std::endl;
+#endif // _DEBUG
+                    static char sNameToChange[NAME_SIZE] = "";
+                    static char sDescriptToChange[DESCRIPTION_SIZE] = "";
+                    static char sBrandToChange[BRAND_SIZE] = "";
+                    static tm sExpirationDateToChange = ImGui::GetDateZero();
+                    static tm sManufacturingDateToChange = ImGui::GetDateZero();
+                    static int sLoteToChange = 12345;
+                    static double sPriceToChange = 100.00;
+
+                    ImGui::InputTextWithHint("Name", "The name of the product", sNameToChange, IM_ARRAYSIZE(sNameToChange));
+                    ImGui::InputTextWithHint("Description", "The description of the product", sDescriptToChange, IM_ARRAYSIZE(sDescriptToChange));
+                    ImGui::InputTextWithHint("Brand", "The brand of the product", sBrandToChange, IM_ARRAYSIZE(sBrandToChange));
+                    ImGui::DateChooser("Choose Expiration Date", sExpirationDateToChange, "%m/%d/%Y", false, (bool*)0);
+                    ImGui::DateChooser("Choose Manufacturing Date", sManufacturingDateToChange, "%m/%d/%Y", false, (bool*)0);
+                    ImGui::InputInt("Choose The Lote", &sLoteToChange);
+                    ImGui::InputDouble("Choose The Price US$", &sPriceToChange);
 
                     if (ImGui::Button("Sure Change Selected"))
                     {
-
+                        Product sProductWillBePushed(
+                            sNameToChange, sDescriptToChange,
+                            sBrandToChange,
+                            mktime(&sExpirationDateToChange),
+                            mktime(&sManufacturingDateToChange),
+                            sLoteToChange,
+                            sPriceToChange
+                        );
+#ifdef _DEBUG
+                        sProductWillBePushed.printProduct();
+                        std::cout << "TRACE RING 3 : CHANGE - PUSHED " << std::endl;
+#endif // _DEBUG
+                        mkt_container.changeProduct(fd[sCurrentItemInChange], sProductWillBePushed);
                     }
                 }
             }
@@ -339,7 +387,7 @@ int main(int, char**)
                 ImGui::End();
             }
 
-            if (ImGui::Button("Show Credits")) show_credits = true;
+            if (ImGui::Button("Show Credits")) show_credits = (show_credits == true) ? false : true;
             ImGui::ColorEdit3("Change Background Color", (float*)&clear_color); // Edit 3 floats representing a color
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
