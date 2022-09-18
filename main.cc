@@ -185,7 +185,7 @@ int main(int, char**)
                 {
                     static int sCurrentItemInSearch = 1;
 
-                    std::vector<structio_t> fd = mkt_container.LookupForAProducts(sNameToSearch);
+                    std::vector<rbnode*> fd = mkt_container.LookupForAProducts(sNameToSearch);
 
                     ImGui::ListBox(
                         "ListBox Of Found In Search",
@@ -204,7 +204,6 @@ int main(int, char**)
                 static char sNameToInsert[NAME_SIZE] = "";
                 static char sDescriptToInsert[DESCRIPTION_SIZE] = "";
                 static char sBrandToInsert[BRAND_SIZE] = "";
-                //static time_t sAdditionDateToInsert = time(NULL);
                 static tm sExpirationDateToInsert = ImGui::GetDateZero();
                 static tm sManufacturingDateToInsert = ImGui::GetDateZero();
                 static int sLoteToInsert = 12345;
@@ -270,10 +269,24 @@ int main(int, char**)
                 }
 
                 if (sShowItemsFoundInRemove) {
+
+                    static int sCurrentItemInSearch = 1;
+
+                    std::vector<rbnode*> fd = mkt_container.LookupForAProducts(sNameToRemove);
+
+                    ImGui::ListBox(
+                        "ListBox Of Found In Remove",
+                        &sCurrentItemInSearch,
+                        VectorOfStructIOCharGetter,
+                        fd.data(),
+                        (int)fd.size()
+                    );
+
+                    std::cout << "TRACE RING 3 : LISTING VALUES IN REMOVE : " << std::endl;
                     
                     if (ImGui::Button("Sure Remove Selected"))
                     {
-
+                        mkt_container.removeProduct(fd[sCurrentItemInSearch]);
                     }
                 }
             }

@@ -4,7 +4,6 @@
 
 #include <cstring>
 #include <vector>
-
 #include "rbtree.h"
 #include "Product.h"
 
@@ -38,14 +37,14 @@ private:
     /* This is so gross I'm about to vomit on the screen but don't you dare say it's bad I just
     took the guts out of the body so I can analyze the evidence instead of doing an MRI this 
     should be an ORACLE closed box, but we're not at the best time */
-    void _LookupAtIndexVec(const rbnode* x, const void* data, std::vector<structio_t> &found) {
+    void _LookupAtIndexVec(const rbnode* x, const void* data, std::vector<rbnode*> &found) {
 
         if (x != pIndexTree->nil)
         {
             if (pIndexTree->cmpfun(x->data, data) == 0)
             {
                 structio_t structData = *(structio_t*)x->data;
-                found.push_back(structData);
+                found.push_back((rbnode*)x);
             }
             _LookupAtIndexVec(x->left, data, found);
             _LookupAtIndexVec(x->right, data, found);
@@ -63,10 +62,10 @@ public:
         rbtree_destroy(pIndexTree);
     }
 
-    void LookupAtIndexVec( const char* NameToLookup, std::vector<structio_t> &ret) {
+    void LookupAtIndexVec( const char* NameToLookup, std::vector<rbnode*> &ret)
+    {
         structio_t lStructIO;
         strcpy_s(lStructIO.mName, NAME_SIZE, NameToLookup);
-
         _LookupAtIndexVec(pIndexTree->root->left, &lStructIO, ret);
     }
 
@@ -88,25 +87,13 @@ public:
     }
 };
 
-bool VectorOfStructIOCharGetter(void* data, int index, const char** output)
-{
-    //char buff[80]; struct tm when;
-    //structio_t* str_io = (structio_t*)data;
-    //structio_t& crr_str_io = str_io[index];
-    //_localtime64_s(&when, &crr_str_io.mManufacturingDate);
-    //asctime_s(buff, sizeof(buff), &when);
-    //std::string output_string;
-    //output_string.append("Name: ");
-    //output_string.append(crr_str_io.mName);
-    //output_string.append(" Lote: ");
-    //output_string.append(std::to_string(crr_str_io.mLote));
-    //output_string.append(" Manufacturing Date: ");
-    //output_string.append(buff);
-    //*output = output_string.c_str();
-    
-    structio_t* str_io = (structio_t*)data;
-    structio_t& crr_str_io = str_io[index];
-    *output = crr_str_io.mName;
+bool VectorOfStructIOCharGetter(void* x, int index, const char** output)
+{   
+    rbnode* str_io = (rbnode*)x;
+    rbnode& crr_str_io = str_io[index];
+    structio_t sio = *(structio_t*)str_io->data;
+
+    *output = sio.mName;
 
     return true;
 }
@@ -122,11 +109,11 @@ int structio_t_cmp(const void* a, const void* b)
     {
         return -1;
     }
-    else if ( (strcmp((*(structio_t*)a).mName, (*(structio_t*)b).mName)) > 0)
+    else if ( (strcmp((*(structio_t*)a).mName, (*(structio_t*)b).mName)) > 0 )
     {
         return 1;
     }
-    else // ( (strcmp((*(structio_t*)a).mName, (*(structio_t*)b).mName)) == 0)
+    else // ( (strcmp((*(structio_t*)a).mName, (*(structio_t*)b).mName)) == 0 )
     {
         return 0;
     }

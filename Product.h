@@ -8,9 +8,9 @@
 #include <cstring>
 #include <ctime>
 
-#define NAME_SIZE 20
+#define NAME_SIZE 25
 #define DESCRIPTION_SIZE 80
-#define BRAND_SIZE 10
+#define BRAND_SIZE 20
 
 class Product {
 private:

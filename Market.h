@@ -6,7 +6,6 @@
 #include <list>
 #include <vector>
 #include <string>
-
 #include "IO.h"
 #include "Index.h"
 
@@ -15,7 +14,7 @@ class Market {
 private:
 	//IO<TNumOfSections,TNumOfShelfsOnSection,TNumOfProductsOnShelf> mIOfs;
 	Index mIndex;
-	std::vector<structio_t> mSearchCointainer;
+	std::vector<rbnode*> mSearchCointainer;
 
 public:
 	Market() {};
@@ -26,17 +25,16 @@ public:
 	Product getProduct(structio_t whereIs);
 	void changeProduct(structio_t whereIs);
 	void insertProduct(Product toInsert);
-	void removeProduct(structio_t whereIsToRemove);
+	void removeProduct(rbnode* whereIsToRemove);
 
 	void SearchOn(const char* name)
 	{
 		mIndex.LookupAtIndexVec(name, mSearchCointainer);
 	}
 
-	std::vector<structio_t> &LookupForAProducts(const char* name)
+	std::vector<rbnode*> &LookupForAProducts(const char* name)
 	{
 		mSearchCointainer.clear();
-
 
 		mIndex.LookupAtIndexVec(name, mSearchCointainer);
 
@@ -48,12 +46,12 @@ template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShel
 void Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::
 insertProduct(Product toInsert)
 {
-	//long long int lOffset = InsertToInventory(toInsert);
-
 	structio_t lIOStructure;
 
 	lIOStructure.mAmIonInventory = false;
 	strcpy_s(lIOStructure.mName, NAME_SIZE, toInsert.getName());
+
+	//long long int lOffset = InsertToInventory(toInsert);
 	lIOStructure.mOffset = 25;
 
 	lIOStructure.mLote = toInsert.getLote();
@@ -65,6 +63,13 @@ insertProduct(Product toInsert)
 	mIndex.PrintIndex();
 
 	std::cout << "TRACE RING 3 : INSERT TO INDEX AND FILE - PUSHED " << std::endl;
+}
+
+template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
+void Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::
+removeProduct(rbnode* whereIsToRemove)
+{
+	mIndex.RemoveFromIndex(whereIsToRemove);
 }
 
 #endif // ! MARKET_H
