@@ -8,11 +8,11 @@
 #include "Product.h"
 
 struct structio_t {
-    bool mAmIonInventory;
-    char mName[NAME_SIZE];
-    unsigned int mLote;
-    time_t mManufacturingDate;
     long long int mOffset;
+    time_t mManufacturingDate;
+    unsigned int mLote;
+    char mName[NAME_SIZE];
+    bool mAmIonInventory;
 };
 static void structio_t_destroy(void* a);
 static int structio_t_cmp(const void* a, const void* b);
