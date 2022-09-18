@@ -15,7 +15,6 @@ private:
 	//IO<TNumOfSections,TNumOfShelfsOnSection,TNumOfProductsOnShelf> mIOfs;
 	Index mIndex;
 	std::vector<rbnode*> mSearchCointainer;
-
 public:
 	Market() {};
 	~Market() {};
@@ -23,7 +22,7 @@ public:
 	//void LookupForAProducts(const char* name, std::vector<const char*> &ret);
 
 	Product getProduct(structio_t whereIs);
-	void changeProduct(structio_t whereIs);
+	void changeProduct(rbnode* whereIsToChange, Product productToChange);
 	void insertProduct(Product toInsert);
 	void removeProduct(rbnode* whereIsToRemove);
 
@@ -70,6 +69,16 @@ void Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::
 removeProduct(rbnode* whereIsToRemove)
 {
 	mIndex.RemoveFromIndex(whereIsToRemove);
+
+	/* Remove from files */
+}
+
+template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
+void Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::
+changeProduct(rbnode* whereIsToChange, Product productToChange)
+{
+	removeProduct(whereIsToChange);
+	insertProduct(productToChange);
 }
 
 #endif // ! MARKET_H
