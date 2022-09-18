@@ -89,9 +89,9 @@ public:
 
 bool VectorOfStructIOCharGetter(void* x, int index, const char** output)
 {   
-    rbnode* str_io = (rbnode*)x;
-    rbnode& crr_str_io = str_io[index];
-    structio_t sio = *(structio_t*)str_io->data;
+    rbnode* *str_io = (rbnode**)x;
+    rbnode& crr_str_io = *str_io[index];
+    structio_t sio = *(structio_t*)crr_str_io.data;
 
     *output = sio.mName;
 
