@@ -5,12 +5,18 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
-
-#include "Section.h"
 #include "Product.h"
 #include "File.h"
 
 #define FILENAME "SMARTMARKET"
+
+struct product_storage_t {
+    bool is_deleted = false;
+    unsigned short int whereshelf;
+    unsigned short int wheresection;
+    unsigned short int wheredepth;
+    Product product_itself;
+};
 
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
 class IO {
@@ -20,34 +26,73 @@ private:
     FileHeader mFileHeader;
     product_controller_t mMtf[TNumOfSections][TNumOfShelfsOnSection][TNumOfProductsOnShelf];
 
-    void ReadFileHeader() {
+    void ReadFileHeader()
+    {
         mIoFileStream.seekg(std::ios::beg);
         mIoFileStream.read((char*)&mFileHeader, sizeof(FileHeader));
     }
 
-    void WriteFileHeader() {
+    void WriteFileHeader()
+    {
         mIoFileStream.seekp(std::ios::beg);
         mIoFileStream.write((char*)&mFileHeader, sizeof(FileHeader));
     }
 
+    void ReadFileMtf()
+    {
+        mIoFileStream.seekg(mFileHeader.OffsetToMtf, std::ios::beg);
+        mIoFileStream.read((char*)&mMtf, sizeof(product_controller_t));
+    }
+
+    void WriteFileMtf()
+    {
+        mIoFileStream.seekp(mFileHeader.OffsetToMtf, std::ios::beg);
+        mIoFileStream.write((char*)&mMtf, sizeof(product_controller_t));
+    }
 public:
     IO();
     ~IO();
 
-    void PrintFileHeader() {
+    void PrintFileHeader()
+    {
         ReadFileHeader();
         mFileHeader.printFileHeader();
     }
 
     void RemoveFromInventory();
 
-    long long int InsertToInventory(Product product) {
+    long long int InsertToInventory(Product product)
+    {
+        int idepth, ishelf, iproducts;
         ReadFileHeader();
+        ReadFileMtf();
+
+        for (idepth = 0; idepth < TNumOfSections; idepth++)
+        {
+            for (ishelf = 0; ishelf < TNumOfShelfsOnSection; ishelf++)
+            {
+                for (iproducts = 0; iproducts < TNumOfProductsOnShelf; iproducts++)
+                {
+                    product_controller_t loop_mtf = mMtf[idepth][ishelf][iproducts];
+                    if (loop_mtf.is_occuped == false) break;
+                }
+            }
+        }
+
+        product_storage_t new_inserted_product = {
+            false, idepth, ishelf, iproducts, product
+        };
+
         mIoFileStream.seekp(mFileHeader.OffsetToShelfBlock, std::ios::beg);
         long long int ret = mIoFileStream.tellp();
-        mIoFileStream.write((char*)&product, sizeof(Product));
+        mIoFileStream.write((char*)&new_inserted_product, sizeof(product_storage_t));
 
-        mFileHeader.
+        product_controller_t correct_mtf = { true , false , ret };
+        mMtf[idepth][ishelf][iproducts] = correct_mtf;
+        mFileHeader.OffsetToInventoryBlockNextFree = mIoFileStream.tellp();
+
+        WriteFileHeader();
+        WriteFileMtf();
 
         return ret;
     }
@@ -67,7 +112,7 @@ public:
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
 inline IO<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::IO()
 {
-    std::string filename = "SMARTMARKET";
+    std::string filename = FILENAME;
 
     /* I think I am creating a file for the first time?? This is an ethernal server
     but can we deal with energy issues but I will not deal with journaling here
@@ -90,14 +135,14 @@ inline IO<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::IO()
         if (!mIoFileStream) {
             std::cout << "Failed to open file for operations" << std::endl;
         }
-        
-        Section<TNumOfProductsOnShelf, TNumOfShelfsOnSection> writingsections;
         mIoFileStream.seekp(std::ios::beg);
         mIoFileStream.write((char*)&mFileHeader, sizeof(FileHeader));
-        mIoFileStream.write((char*)&mMtf, sizeof(writingsections));
+        mIoFileStream.write((char*)&mMtf, sizeof(mMtf));
         long long int actual_byte_offset_for_end_of_maket = mIoFileStream.tellp();
         mFileHeader = {
             sizeof(FileHeader),
+            actual_byte_offset_for_end_of_maket,
+            actual_byte_offset_for_end_of_maket,
             actual_byte_offset_for_end_of_maket,
             actual_byte_offset_for_end_of_maket,
             TNumOfSections,
