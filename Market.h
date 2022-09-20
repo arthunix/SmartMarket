@@ -12,7 +12,7 @@
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
 class Market {
 private:
-	//IO<TNumOfSections,TNumOfShelfsOnSection,TNumOfProductsOnShelf> mIOfs;
+	IO<TNumOfSections,TNumOfShelfsOnSection,TNumOfProductsOnShelf> mIOfs;
 	Index mIndex;
 	std::vector<rbnode*> mSearchCointainer;
 public:

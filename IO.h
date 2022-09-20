@@ -10,23 +10,48 @@
 #include "Product.h"
 #include "File.h"
 
+#define FILENAME "SMARTMARKET"
+
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
 class IO {
 private:
     std::string mFileName;
     std::fstream mIoFileStream;
     FileHeader mFileHeader;
+    product_controller_t mMtf[TNumOfSections][TNumOfShelfsOnSection][TNumOfProductsOnShelf];
 
-    FileHeader ReadFileHeader();
-    void WriteFileHeader(FileHeader fileheader);
+    void ReadFileHeader() {
+        mIoFileStream.seekg(std::ios::beg);
+        mIoFileStream.read((char*)&mFileHeader, sizeof(FileHeader));
+    }
 
-    bool CheckForFileExistency();
+    void WriteFileHeader() {
+        mIoFileStream.seekp(std::ios::beg);
+        mIoFileStream.write((char*)&mFileHeader, sizeof(FileHeader));
+    }
+
 public:
-    IO(std::string filename);
+    IO();
     ~IO();
 
+    void PrintFileHeader() {
+        ReadFileHeader();
+        mFileHeader.printFileHeader();
+    }
+
     void RemoveFromInventory();
-    long long int InsertToInventory(Product product);
+
+    long long int InsertToInventory(Product product) {
+        ReadFileHeader();
+        mIoFileStream.seekp(mFileHeader.OffsetToShelfBlock, std::ios::beg);
+        long long int ret = mIoFileStream.tellp();
+        mIoFileStream.write((char*)&product, sizeof(Product));
+
+        mFileHeader.
+
+        return ret;
+    }
+
     void ModifyFromInventory();
     Product SeekOnInventory();
 
@@ -40,39 +65,48 @@ public:
 };
 
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
-inline IO<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::IO(std::string filename)
+inline IO<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::IO()
 {
+    std::string filename = "SMARTMARKET";
+
     /* I think I am creating a file for the first time?? This is an ethernal server
     but can we deal with energy issues but I will not deal with journaling here
     just I will verify if the file already exist */
+
     std::ifstream file(filename.c_str());
-    if (file.good())
+    if (file)
     {
         ReadFileHeader();
+        PrintFileHeader();
         file.close();
-        mIoFileStream.open(filename.c_str());
-        ReadFileHeader();
     }
     else
     {
-        mIoFileStream.open(filename.c_str());
         std::cout << "We have no such file, writing one by the way" << std::endl;
-        Section<TNumOfProductsOnShelf, TNumOfShelfsOnSection> writingsections;
-        mIoFileStream.write((char*)&mFileHeader, sizeof(FileHeader));
-        for (int i = 0; i < TNumOfSections; i++)
-        {
-            mIoFileStream.write((char*)&writingsections, sizeof(writingsections));
+        mIoFileStream.open(filename.c_str(), std::ios::out);
+        mIoFileStream.close();
+
+        mIoFileStream.open(filename.c_str(), std::ios::in | std::ios::out);
+        if (!mIoFileStream) {
+            std::cout << "Failed to open file for operations" << std::endl;
         }
-        long long actual_byte_offset_for_end_of_maket = mIoFileStream.tellp();
+        
+        Section<TNumOfProductsOnShelf, TNumOfShelfsOnSection> writingsections;
+        mIoFileStream.seekp(std::ios::beg);
+        mIoFileStream.write((char*)&mFileHeader, sizeof(FileHeader));
+        mIoFileStream.write((char*)&mMtf, sizeof(writingsections));
+        long long int actual_byte_offset_for_end_of_maket = mIoFileStream.tellp();
         mFileHeader = {
-            .NumberOfSections = TNumOfSections,
-            .NumberOfShelfsOnSection = TNumOfShelfsOnSection,
-            .NumberOfProductsOnShelf = TNumOfProductsOnShelf,
-            .OffsetToShelfBlock = sizeof(mFileHeader),
-            .OffsetToInventoryBlock = actual_byte_offset_for_end_of_maket
+            sizeof(FileHeader),
+            actual_byte_offset_for_end_of_maket,
+            actual_byte_offset_for_end_of_maket,
+            TNumOfSections,
+            TNumOfShelfsOnSection,
+            TNumOfProductsOnShelf
         };
         mIoFileStream.seekp(std::ios::beg);
-        mIoFileStream.write((char*)&mFileHeader, sizeof(mFileHeader));
+        mIoFileStream.write((char*)&mFileHeader, sizeof(FileHeader));
+        PrintFileHeader();
     }
 }
 
