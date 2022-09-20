@@ -16,7 +16,9 @@ struct FileHeader {
     //char MAGIC_SING[11] = ".AACMarket";
     short int OffsetToMtf;
     long long int OffsetToShelfBlock;
+    long long int OffsetToShelfBlockNextFree;
     long long int OffsetToInventoryBlock;
+    long long int OffsetToInventoryBlockNextFree;
     int NumberOfSections = 0;
     int NumberOfShelfsOnSection = 0;
     int NumberOfProductsOnShelf = 0;
@@ -29,6 +31,5 @@ struct FileHeader {
         std::cout << "NumberOfProductsOnShelf = " << NumberOfProductsOnShelf << std::endl;
     }
 };
-
 
 #endif // !FILE_H
