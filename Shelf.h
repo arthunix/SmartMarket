@@ -10,7 +10,7 @@ struct product_controller_t {
 };
 
 template<int TNumOfProductsOnShelf>
-class Shelf {
+struct Shelf {
 	product_controller_t arr_of_products[TNumOfProductsOnShelf];
 };
 

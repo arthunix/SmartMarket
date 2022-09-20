@@ -8,7 +8,7 @@
 I IMAGINE HERE WE HAVE: 5 shelfs (height) at each side of a hall then we have 10
 */
 template<int NumOfProductsOnShelf, int NumOfShelfsOnSection>
-class Section {
+struct Section {
 	Shelf<NumOfProductsOnShelf> arr_of_shelf[NumOfShelfsOnSection];
 };
 

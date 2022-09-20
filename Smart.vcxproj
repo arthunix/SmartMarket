@@ -173,7 +173,7 @@
     <ClCompile Include="external\libcutils\list.c" />
     <ClCompile Include="external\libcutils\rbtree.c" />
     <ClCompile Include="Index.cpp" />
-    <ClCompile Include="main.cc" />
+    <ClCompile Include="io_test.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\imgui-outofthree-addons\imguidatechooser\imguidatechooser.h" />
@@ -193,8 +193,6 @@
     <ClInclude Include="IO.h" />
     <ClInclude Include="Market.h" />
     <ClInclude Include="Product.h" />
-    <ClInclude Include="Section.h" />
-    <ClInclude Include="Shelf.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
