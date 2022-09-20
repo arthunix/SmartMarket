@@ -172,8 +172,7 @@
     <ClCompile Include="external\libcutils\common.c" />
     <ClCompile Include="external\libcutils\list.c" />
     <ClCompile Include="external\libcutils\rbtree.c" />
-    <ClCompile Include="Index.cpp" />
-    <ClCompile Include="io_test.cc" />
+    <ClCompile Include="main.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\imgui-outofthree-addons\imguidatechooser\imguidatechooser.h" />

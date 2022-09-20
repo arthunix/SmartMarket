@@ -48,10 +48,7 @@
     <ClCompile Include="external\libcutils\list.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Index.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="io_test.cc">
+    <ClCompile Include="main.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

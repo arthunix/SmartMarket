@@ -119,7 +119,8 @@ int structio_t_cmp(const void* a, const void* b)
     }
 }
 
-void structio_t_print(const void* struct_io) {
+void structio_t_print(const void* struct_io)
+{
     printf("Name = %s / ", (*(structio_t*)struct_io).mName);
     printf("Offset = %lli / ", (*(structio_t*)struct_io).mOffset);
     printf("Lote = %ui", (*(structio_t*)struct_io).mLote);
