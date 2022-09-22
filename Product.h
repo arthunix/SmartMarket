@@ -20,6 +20,7 @@ private:
 	time_t mExpirationDate;
 	time_t mManufacturingDate;
 	time_t mAdditionDate;
+	time_t mLastModificationDate;
 	double mPrice;
 	unsigned int mLote;
 	// BarCode _barcode; /* Stands for computer vision I think */
@@ -98,14 +99,18 @@ double Price
 	strcpy_s(mBrand, BRAND_SIZE, Brand);
 	mExpirationDate = ExpirationDate;
 	mManufacturingDate = ManufacturingDate;
-	time_t currTime; mAdditionDate = time(&currTime);
+	time_t currTime; 
+	mAdditionDate = time(&currTime);
+	mLastModificationDate = time(&currTime);
 	mLote = Lote;
 	mPrice = Price;
 }
 
 Product::~Product()
 {
+#ifdef _DEBUG
 	std::cerr << "TRACE RING 5 : Destructing the object" << std::endl;
+#endif // _DEBUG
 }
 
 const char* Product::getName()

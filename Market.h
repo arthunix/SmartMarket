@@ -60,8 +60,9 @@ insertProduct(Product toInsert)
 	mIndex.InsertToIndex(lIOStructure);
 
 	mIndex.PrintIndex();
-
+#ifdef _DEBUG
 	std::cout << "TRACE RING 3 : INSERT TO INDEX AND FILE - PUSHED " << std::endl;
+#endif // _DEBUG
 }
 
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
