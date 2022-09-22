@@ -8,7 +8,7 @@
 #include "Product.h"
 
 struct structio_t {
-    long long int mOffset;
+    long int mOffset;
     time_t mManufacturingDate;
     unsigned int mLote;
     char mName[NAME_SIZE];
@@ -122,7 +122,7 @@ int structio_t_cmp(const void* a, const void* b)
 void structio_t_print(const void* struct_io)
 {
     printf("Name = %s / ", (*(structio_t*)struct_io).mName);
-    printf("Offset = %lli / ", (*(structio_t*)struct_io).mOffset);
+    printf("Offset = %li / ", (*(structio_t*)struct_io).mOffset);
     printf("Lote = %ui", (*(structio_t*)struct_io).mLote);
     fflush(NULL);
 }
