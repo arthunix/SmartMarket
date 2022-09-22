@@ -24,8 +24,9 @@ struct FileHeader {
     int NumberOfProductsOnShelf = 0;
 
     void printFileHeader() {
+        std::cout << "OffsetToMtf = " << OffsetToMtf << std::endl;
         std::cout << "OffsetToShelfBlock = " << OffsetToShelfBlock << std::endl;
-        std::cout << "OffsetToInventoryBlock = " << OffsetToInventoryBlock << std::endl;
+        //std::cout << "OffsetToInventoryBlock = " << OffsetToInventoryBlock << std::endl;
         std::cout << "NumberOfSections = " << NumberOfSections << std::endl;
         std::cout << "NumberOfShelfsOnSection = " << NumberOfShelfsOnSection << std::endl;
         std::cout << "NumberOfProductsOnShelf = " << NumberOfProductsOnShelf << std::endl;

@@ -4,12 +4,20 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <cstdio>
 #include <fstream>
 #include <cstring>
+#include <io.h>
 #include "Product.h"
 #include "File.h"
 
 #define FILENAME "SMARTMARKET"
+
+#define log_file_operations_error(error) {                                  \
+if (err != 0)                                                               \
+    std::cout << "Fail in file operations -> ";                             \
+    std::cout << "error code = " << error << std::endl;                     \
+}
 
 struct product_storage_t {
     bool is_deleted = false;
@@ -22,40 +30,55 @@ template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShel
 class IO {
 private:
     std::string mFileName;
-    std::fstream mIoFileStream;
+    FILE* mIoFileStream;
     FileHeader mFileHeader;
     product_controller_t mMtf[TNumOfSections][TNumOfShelfsOnSection][TNumOfProductsOnShelf];
+    errno_t err;
+
+    int gNum = 0;
 
     void ReadFileHeader()
     {
-        std::streampos pos = mIoFileStream.tellg();
-        mIoFileStream.seekg(std::ios::beg);
-        mIoFileStream.read((char*)&mFileHeader, sizeof(FileHeader));
-        mIoFileStream.seekg(pos);
+        long long int pos = ftell(mIoFileStream);
+        err = fseek(mIoFileStream, 0, SEEK_SET);
+        log_file_operations_error(err);
+        err = fread((char*)&mFileHeader, sizeof(FileHeader), 1, mIoFileStream);
+        log_file_operations_error(err);
+        err = fseek(mIoFileStream, pos, SEEK_SET);
+        log_file_operations_error(err);
     }
 
     void WriteFileHeader()
     {
-        std::streampos pos = mIoFileStream.tellp();
-        mIoFileStream.seekp(std::ios::beg);
-        mIoFileStream.write((char*)&mFileHeader, sizeof(FileHeader));
-        mIoFileStream.seekp(pos);
+        long long int pos = ftell(mIoFileStream);
+        err = fseek(mIoFileStream, 0, SEEK_SET);
+        log_file_operations_error(err);
+        err = fwrite((char*)&mFileHeader, sizeof(FileHeader), 1, mIoFileStream);
+        log_file_operations_error(err);
+        err = fseek(mIoFileStream, pos, SEEK_SET);
+        log_file_operations_error(err);
     }
 
     void ReadFileMtf()
     {
-        std::streampos pos = mIoFileStream.tellg();
-        mIoFileStream.seekg(mFileHeader.OffsetToMtf, std::ios::beg);
-        mIoFileStream.read((char*)&mMtf, sizeof(mMtf));
-        mIoFileStream.seekg(pos);
+        long long int pos = ftell(mIoFileStream);
+        err = fseek(mIoFileStream, mFileHeader.OffsetToMtf, SEEK_SET);
+        log_file_operations_error(err);
+        err = fread((char*)&mMtf, sizeof(mMtf), 1, mIoFileStream);
+        log_file_operations_error(err);
+        err = fseek(mIoFileStream, pos, SEEK_SET);
+        log_file_operations_error(err);
     }
 
     void WriteFileMtf()
     {
-        std::streampos pos = mIoFileStream.tellp();
-        mIoFileStream.seekp(mFileHeader.OffsetToMtf, std::ios::beg);
-        mIoFileStream.write((char*)&mMtf, sizeof(mMtf));
-        mIoFileStream.seekp(pos);
+        long long int pos = ftell(mIoFileStream);
+        err = fseek(mIoFileStream, mFileHeader.OffsetToMtf, SEEK_SET);
+        log_file_operations_error(err);
+        err = fwrite((char*)&mMtf, sizeof(mMtf), 1, mIoFileStream);
+        log_file_operations_error(err);
+        err = fseek(mIoFileStream, pos, SEEK_SET);
+        log_file_operations_error(err);
     }
 public:
     IO();
@@ -69,10 +92,11 @@ public:
 
     long long int InsertToShelf(Product product)
     {
+        long long int ret = -1; product_controller_t loop_mtf;
         unsigned short int idepth, ishelf, iproducts;
-        product_controller_t loop_mtf;
-        ReadFileHeader();
-        ReadFileMtf();
+        ReadFileHeader(); ReadFileMtf();
+
+        gNum += 1;
 
         for (idepth = 0; idepth < TNumOfSections; idepth++)
         {
@@ -88,34 +112,50 @@ public:
             if (loop_mtf.is_occuped == false) break;
         }
 
-        product_storage_t new_inserted_product = {
-            false, idepth, ishelf, product
-        };
+        product_storage_t new_inserted_product = { false, idepth, ishelf, product };
 
-        mIoFileStream.seekp(0, std::ios::end);
-        long long int ret = mIoFileStream.tellp();
+        ret = ftell(mIoFileStream);
 #ifdef _DEBUG
-        std::cout << "byte offset = " << ret << std::endl;
+        std::cout << "byte I will write the product = " << ret << std::endl;
 #endif // _DEBUG
-        mIoFileStream.write((char*)&new_inserted_product, sizeof(new_inserted_product));
 
+        err = fwrite((char*)&new_inserted_product, sizeof(product_storage_t), 1, mIoFileStream);
+
+        log_file_operations_error(err);
         product_controller_t correct_mtf = { true , false , ret };
         mMtf[idepth][ishelf][iproducts] = correct_mtf;
-        mFileHeader.OffsetToInventoryBlockNextFree = mIoFileStream.tellp();
 
-        WriteFileHeader();
-        WriteFileMtf();
+        mFileHeader.OffsetToShelfBlockNextFree = ftell(mIoFileStream);
 
-        mIoFileStream.clear();
-
+        WriteFileHeader(); WriteFileMtf();
         return ret;
     }
 
-    long long int InsertToShelf(Product product, int iWantToPutInShelf, int iWantToPutInSection);
+    void RemoveFromShelf(long byteoffset_to_product)
+    {
+        long whereWasI = ftell(mIoFileStream);
+        product_storage_t lReadProductStructure;
 
-    void RemoveFromShelf();
+        err = fseek(mIoFileStream, byteoffset_to_product, SEEK_SET);
+        log_file_operations_error(err);
+        fread((char*)&lReadProductStructure, sizeof(product_storage_t), 1, mIoFileStream);
 
-    void ModifyFromShelf();
+        lReadProductStructure.is_deleted = true;
+
+        err = fseek(mIoFileStream, byteoffset_to_product, SEEK_SET);
+        log_file_operations_error(err);
+        err = fwrite((char*)&lReadProductStructure, sizeof(product_storage_t), 1, mIoFileStream);
+        log_file_operations_error(err);
+
+        err = fseek(mIoFileStream, whereWasI, SEEK_SET);
+        log_file_operations_error(err);
+    }
+
+    long long int ModifyFromShelf(long byteoffset_to_product, Product modified_product)
+    {
+        RemoveFromShelf(byteoffset_to_product);
+        return InsertToShelf(modified_product);
+    }
 
     Product SeekOnShelf();
 
@@ -123,22 +163,32 @@ public:
 
     FileHeader getFileHeader() { return mFileHeader; };
 
+#ifdef _DEBUG
     void printProducts()
     {
-        mIoFileStream.seekg(mFileHeader.OffsetToShelfBlock, std::ios::beg);
-#ifdef _DEBUG
-        std::cout << "byte offset = " << mIoFileStream.tellg();
-#endif // _DEBUG
+        std::cout << " \n\n--- PRINTING PRODUCTS --- " << gNum << std::endl;
+        ReadFileHeader();
+        err = fseek(mIoFileStream, mFileHeader.OffsetToShelfBlock, SEEK_SET);
+        log_file_operations_error(err);
+        long tell = ftell(mIoFileStream);
+        std::cout << "fteel in print products = " << tell << std::endl;
         product_storage_t lReadProductStructure;
         Product lReadProduct;
-        lReadProduct = lReadProductStructure.product_itself;
-        lReadProduct.printProduct();
-        /*while (mIoFileStream.read((char*)&lReadProductStructure, sizeof(lReadProductStructure)));
+
+        for (int k = 0; k < gNum; k++)
         {
+            std::cout << "val = " << k;
+            long tell = ftell(mIoFileStream);
+            std::cout << " fteel in print products = " << tell << std::endl;
+            fread((char*)&lReadProductStructure, sizeof(product_storage_t), 1, mIoFileStream);
             lReadProduct = lReadProductStructure.product_itself;
+            std::cout << "IS PRODUCT DELETED ??? = " << lReadProductStructure.is_deleted << std::endl;
             lReadProduct.printProduct();
-        }*/
+            std::cout << "\n";
+        }    
+        std::cout << " --- END OF PRINTING PRODUCTS ---\n\n " << std::endl;
     }
+#endif // _DEBUG
 };
 
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
@@ -147,33 +197,23 @@ inline IO<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::IO()
     /* I think I am creating a file for the first time?? This is an ethernal server
     but can we deal with energy issues but I will not deal with journaling here
     just I will verify if the file already exist */
-
-    std::ifstream file(FILENAME);
-    if (file)
+    if ((err = _access_s(FILENAME, 0)) == 0)
     {
-        ReadFileHeader();
-        PrintFileHeader();
-        file.close();
+
     }
     else
     {
-#ifdef _DEBUG
         std::cout << "We have no such file, writing one by the way" << std::endl;
-#endif // _DEBUG
-        mIoFileStream.open(FILENAME, std::ios::out | std::ios::binary);
-        mIoFileStream.close();
-
-        mIoFileStream.open(FILENAME, std::ios::in | std::ios::out | std::ios::binary);
-#ifdef _DEBUG
-        if (!mIoFileStream) {
-            std::cout << "Failed to open file for operations" << std::endl;
-        }
-#endif // _DEBUG
-        mIoFileStream.seekp(std::ios::beg);
-        long long int actual_byte_offset_for_fileheader = mIoFileStream.tellp();
-        mIoFileStream.write((char*)&mFileHeader, sizeof(mFileHeader));
-        long long int actual_byte_offset_for_mtf = mIoFileStream.tellp();
-        mIoFileStream.write((char*)&mMtf, sizeof(mMtf));
+        err = fopen_s(&mIoFileStream, FILENAME, "w+");
+        log_file_operations_error(err);
+        err = fseek(mIoFileStream, 0, SEEK_SET);
+        log_file_operations_error(err);
+        long long int actual_byte_offset_for_fileheader = ftell(mIoFileStream);
+        err = fwrite((char*)&mFileHeader, sizeof(mFileHeader), 1, mIoFileStream);
+        log_file_operations_error(err);
+        long long int actual_byte_offset_for_mtf = ftell(mIoFileStream);
+        err = fwrite((char*)&mMtf, sizeof(mMtf), 1, mIoFileStream);
+        log_file_operations_error(err);
         long long int actual_byte_offset_for_shelf = sizeof(mFileHeader) + sizeof(mMtf);
 
 #ifdef _DEBUG
@@ -183,7 +223,7 @@ inline IO<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::IO()
         std::cout << "actual_byte_offset_for_mtf = " << actual_byte_offset_for_mtf << std::endl;
         std::cout << "actual_byte_offset_for_shelf = " << actual_byte_offset_for_shelf << std::endl;
 #endif // _DEBUG
-        
+
         mFileHeader = {
             actual_byte_offset_for_fileheader,
             actual_byte_offset_for_shelf,
@@ -194,13 +234,17 @@ inline IO<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::IO()
             TNumOfShelfsOnSection,
             TNumOfProductsOnShelf
         };
-        std::streampos pos = mIoFileStream.tellp();
+
+        long long int pos = ftell(mIoFileStream);
 #ifdef _DEBUG
         std::cout << "byte offset on creation = " << (long long int)pos << std::endl;
 #endif // _DEBUG
-        mIoFileStream.seekp(std::ios::beg);
-        mIoFileStream.write((char*)&mFileHeader, sizeof(FileHeader));
-        mIoFileStream.seekp(pos);
+        err = fseek(mIoFileStream, 0, SEEK_SET);
+        log_file_operations_error(err);
+        err = fwrite((char*)&mFileHeader, sizeof(mFileHeader), 1, mIoFileStream);
+        log_file_operations_error(err);
+        err = fseek(mIoFileStream, pos,  SEEK_SET);
+        log_file_operations_error(err);
 #ifdef _DEBUG
         std::cout << "byte offset on creation = " << (long long int)pos << std::endl;
 #endif // _DEBUG
@@ -208,13 +252,23 @@ inline IO<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::IO()
 #ifdef _DEBUG
         PrintFileHeader();
 #endif // _DEBUG
+        fclose(mIoFileStream);
+        std::cout << " --- Opening file both for reading and writing --- " << std::endl;
+        err = fopen_s(&mIoFileStream, FILENAME, "r+");
+        log_file_operations_error(err);
+#ifdef _DEBUG
+        err = fseek(mIoFileStream, 0, SEEK_END);
+        long tell = ftell(mIoFileStream);
+        log_file_operations_error(err);
+        std::cout << "fteel in at final of create = " << tell << std::endl;
+#endif // _DEBUG
     }
 }
 
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
 inline IO<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::~IO()
 {
-    mIoFileStream.close();
+    fclose(mIoFileStream);
 }
 
 #endif // !IO_H
