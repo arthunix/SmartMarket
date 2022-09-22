@@ -298,9 +298,9 @@ int main(int, char**)
                     {
 #ifdef _DEBUG
                         std::cout << "TRACE RING 3 : REMOVING PRODUCT : " << std::endl;
-                        structio_t_print(fd[sCurrentItemInRemove]);
+                        //structio_t_print(fd[sCurrentItemInRemove]);
 #endif // _DEBUG
-                        mkt_container.removeProduct(fd[sCurrentItemInRemove]);
+                        mkt_container.removeProduct(fd.data(), sCurrentItemInRemove);
                     }
                 }
             }
@@ -369,7 +369,7 @@ int main(int, char**)
                         sProductWillBePushed.printProduct();
                         std::cout << "TRACE RING 3 : CHANGE - PUSHED " << std::endl;
 #endif // _DEBUG
-                        mkt_container.changeProduct(fd[sCurrentItemInChange], sProductWillBePushed);
+                        mkt_container.changeProduct(fd.data(), sCurrentItemInChange, sProductWillBePushed);
                     }
                 }
             }
