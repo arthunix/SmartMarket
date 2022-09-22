@@ -14,11 +14,11 @@ struct product_controller_t {
 /* There is no bounding for this structure */
 struct FileHeader {
     //char MAGIC_SING[11] = ".AACMarket";
-    long long int OffsetToMtf;
-    long long int OffsetToShelfBlock;
-    long long int OffsetToShelfBlockNextFree;
-    long long int OffsetToInventoryBlock;
-    long long int OffsetToInventoryBlockNextFree;
+    long long int OffsetToMtf = 0;
+    long long int OffsetToShelfBlock = 0;
+    long long int OffsetToShelfBlockNextFree = 0;
+    long long int OffsetToInventoryBlock = 0;
+    long long int OffsetToInventoryBlockNextFree = 0;
     int NumberOfSections = 0;
     int NumberOfShelfsOnSection = 0;
     int NumberOfProductsOnShelf = 0;
