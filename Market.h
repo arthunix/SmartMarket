@@ -6,6 +6,8 @@
 #include <list>
 #include <vector>
 #include <string>
+#include "rbtree.h"
+#include "Product.h"
 #include "IO.h"
 #include "Index.h"
 
@@ -22,9 +24,9 @@ public:
 	//void LookupForAProducts(const char* name, std::vector<const char*> &ret);
 
 	Product getProduct(structio_t whereIs);
-	void changeProduct(rbnode* whereIsToChange, Product productToChange);
+	void changeProduct(void* whereIsToChange, int index, Product productToChange);
 	void insertProduct(Product toInsert);
-	void removeProduct(rbnode* whereIsToRemove);
+	void removeProduct(void* whereIsToRemove, int index);
 
 	void SearchOn(const char* name)
 	{
@@ -50,8 +52,7 @@ insertProduct(Product toInsert)
 	lIOStructure.mAmIonInventory = false;
 	strcpy_s(lIOStructure.mName, NAME_SIZE, toInsert.getName());
 
-	//long long int lOffset = InsertToInventory(toInsert);
-	lIOStructure.mOffset = 25;
+	lIOStructure.mOffset = mIOfs.InsertToShelf(toInsert);
 
 	lIOStructure.mLote = toInsert.getLote();
 
@@ -59,27 +60,36 @@ insertProduct(Product toInsert)
 
 	mIndex.InsertToIndex(lIOStructure);
 
-	mIndex.PrintIndex();
 #ifdef _DEBUG
+	mIndex.PrintIndex();
 	std::cout << "TRACE RING 3 : INSERT TO INDEX AND FILE - PUSHED " << std::endl;
 #endif // _DEBUG
 }
 
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
 void Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::
-removeProduct(rbnode* whereIsToRemove)
+removeProduct(void* whereIsToRemove, int index)
 {
-	mIndex.RemoveFromIndex(whereIsToRemove);
+	rbnode* *str_io = (rbnode**)whereIsToRemove;
+	rbnode& crr_str_io = *str_io[index];
+	structio_t sio = *(structio_t*)crr_str_io.data;
 
-	/* Remove from files */
+	mIndex.RemoveFromIndex(str_io[index]);
+	mIOfs.RemoveFromShelf(sio.mOffset);
 }
 
 template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
 void Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::
-changeProduct(rbnode* whereIsToChange, Product productToChange)
+changeProduct(void* whereIsToChange, int index, Product productToChange)
 {
-	removeProduct(whereIsToChange);
+	removeProduct(whereIsToChange, index);
 	insertProduct(productToChange);
+}
+
+template<int TNumOfSections, int TNumOfShelfsOnSection, int TNumOfProductsOnShelf>
+inline Product Market<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::getProduct(structio_t whereIs)
+{
+	mIOfs.SeekOnShelf(whereIs.mOffset);
 }
 
 #endif // ! MARKET_H
