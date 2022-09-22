@@ -39,7 +39,7 @@ private:
 
     void ReadFileHeader()
     {
-        long long int pos = ftell(mIoFileStream);
+        long int pos = ftell(mIoFileStream);
         err = fseek(mIoFileStream, 0, SEEK_SET);
         log_file_operations_error(err);
         err = fread((char*)&mFileHeader, sizeof(FileHeader), 1, mIoFileStream);
@@ -50,7 +50,7 @@ private:
 
     void WriteFileHeader()
     {
-        long long int pos = ftell(mIoFileStream);
+        long int pos = ftell(mIoFileStream);
         err = fseek(mIoFileStream, 0, SEEK_SET);
         log_file_operations_error(err);
         err = fwrite((char*)&mFileHeader, sizeof(FileHeader), 1, mIoFileStream);
@@ -61,7 +61,7 @@ private:
 
     void ReadFileMtf()
     {
-        long long int pos = ftell(mIoFileStream);
+        long int pos = ftell(mIoFileStream);
         err = fseek(mIoFileStream, mFileHeader.OffsetToMtf, SEEK_SET);
         log_file_operations_error(err);
         err = fread((char*)&mMtf, sizeof(mMtf), 1, mIoFileStream);
@@ -72,7 +72,7 @@ private:
 
     void WriteFileMtf()
     {
-        long long int pos = ftell(mIoFileStream);
+        long int pos = ftell(mIoFileStream);
         err = fseek(mIoFileStream, mFileHeader.OffsetToMtf, SEEK_SET);
         log_file_operations_error(err);
         err = fwrite((char*)&mMtf, sizeof(mMtf), 1, mIoFileStream);
@@ -157,7 +157,20 @@ public:
         return InsertToShelf(modified_product);
     }
 
-    Product SeekOnShelf();
+    Product SeekOnShelf(long byteoffset_to_product)
+    {
+        long whereWasI = ftell(mIoFileStream);
+        product_storage_t lReadProductStructure;
+
+        err = fseek(mIoFileStream, byteoffset_to_product, SEEK_SET);
+        log_file_operations_error(err);
+        fread((char*)&lReadProductStructure, sizeof(product_storage_t), 1, mIoFileStream);
+
+        err = fseek(mIoFileStream, whereWasI, SEEK_SET);
+        log_file_operations_error(err);
+
+        return lReadProductStructure.product_itself;
+    }
 
     void CleanFile();
 
