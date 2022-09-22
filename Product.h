@@ -29,6 +29,8 @@ public:
 		char Brand[BRAND_SIZE], time_t ExpirationDate, time_t ManufacturingDate, 
 			unsigned int Lote, double Price);
 
+	Product() {};
+
 	~Product();
 
 	const char* getName();
@@ -193,4 +195,4 @@ void Product::setPrice(double Price)
 	mPrice = Price;
 }
 
-#endif !PRODUCT_H
+#endif // !PRODUCT_H
