@@ -14,7 +14,6 @@ struct product_storage_t {
     bool is_deleted = false;
     unsigned short int whereshelf;
     unsigned short int wheresection;
-    unsigned short int wheredepth;
     Product product_itself;
 };
 
@@ -41,13 +40,13 @@ private:
     void ReadFileMtf()
     {
         mIoFileStream.seekg(mFileHeader.OffsetToMtf, std::ios::beg);
-        mIoFileStream.read((char*)&mMtf, sizeof(product_controller_t));
+        mIoFileStream.read((char*)&mMtf, sizeof(mMtf));
     }
 
     void WriteFileMtf()
     {
         mIoFileStream.seekp(mFileHeader.OffsetToMtf, std::ios::beg);
-        mIoFileStream.write((char*)&mMtf, sizeof(product_controller_t));
+        mIoFileStream.write((char*)&mMtf, sizeof(mMtf));
     }
 public:
     IO();
@@ -59,9 +58,7 @@ public:
         mFileHeader.printFileHeader();
     }
 
-    void RemoveFromInventory();
-
-    long long int InsertToInventory(Product product)
+    long long int InsertToShelf(Product product)
     {
         int idepth, ishelf, iproducts;
         ReadFileHeader();
@@ -83,7 +80,7 @@ public:
             false, idepth, ishelf, iproducts, product
         };
 
-        mIoFileStream.seekp(mFileHeader.OffsetToShelfBlock, std::ios::beg);
+        mIoFileStream.seekp(mFileHeader.OffsetToShelfBlockNextFree, std::ios::beg);
         long long int ret = mIoFileStream.tellp();
         mIoFileStream.write((char*)&new_inserted_product, sizeof(product_storage_t));
 
@@ -97,15 +94,16 @@ public:
         return ret;
     }
 
-    void ModifyFromInventory();
-    Product SeekOnInventory();
+    long long int InsertToShelf(Product product, int iWantToPutInShelf, int iWantToPutInSection);
 
     void RemoveFromShelf();
-    long long int InsertToShelf(Product product);
+
     void ModifyFromShelf();
+
     Product SeekOnShelf();
 
     void CleanFile();
+
     FileHeader getFileHeader() { return mFileHeader; };
 };
 
@@ -136,15 +134,17 @@ inline IO<TNumOfSections, TNumOfShelfsOnSection, TNumOfProductsOnShelf>::IO()
             std::cout << "Failed to open file for operations" << std::endl;
         }
         mIoFileStream.seekp(std::ios::beg);
+        long long int actual_byte_offset_for_fileheader = mIoFileStream.tellp();
         mIoFileStream.write((char*)&mFileHeader, sizeof(FileHeader));
+        long long int actual_byte_offset_for_mtf = mIoFileStream.tellp();
         mIoFileStream.write((char*)&mMtf, sizeof(mMtf));
-        long long int actual_byte_offset_for_end_of_maket = mIoFileStream.tellp();
+        
         mFileHeader = {
-            sizeof(FileHeader),
-            actual_byte_offset_for_end_of_maket,
-            actual_byte_offset_for_end_of_maket,
-            actual_byte_offset_for_end_of_maket,
-            actual_byte_offset_for_end_of_maket,
+            actual_byte_offset_for_fileheader,
+            actual_byte_offset_for_mtf,
+            actual_byte_offset_for_mtf,
+            actual_byte_offset_for_mtf,
+            actual_byte_offset_for_mtf,
             TNumOfSections,
             TNumOfShelfsOnSection,
             TNumOfProductsOnShelf
